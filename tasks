@@ -1,0 +1,21 @@
+Questions to Prof - 
+
+Do we have to implement create and delete operations?
+If yes, then where to store the updated data?
+
+Style framework - Vuetify js
+Query builder - Knex js
+
+Tasks - 
+Database setup
+Frontend setup - Github, Trello etc
+Backend setup
+
+Frontend - 
+Authentication
+Login
+Forgot password
+Dashboard
+Analytics
+Data display
+File import/export
