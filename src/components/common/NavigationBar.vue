@@ -1,40 +1,36 @@
 <template>
-    <div>
-        <v-app-bar
-            elevation="4"
-            flat
-            outlined
-            dark
-            max-height="65px"
-            class="my-app-bar"
-            >
-        
-            <v-app-bar-nav-icon @click="toggleShowDrawer"></v-app-bar-nav-icon>
+    <v-app-bar
+        elevation="4"
+        flat
+        outlined
+        dark
+        max-height="65px"
+        class="my-app-bar"
+        >
 
-            <v-app-bar-title>HMI EARS </v-app-bar-title>
+        <v-icon large class="mr-4">
+            mdi-domain
+        </v-icon>
 
-            <v-spacer></v-spacer>
+        <v-app-bar-title>HMI EARS </v-app-bar-title>
 
-            <v-btn
-                color="primary"
-                elevation="2">
-                Logout
-            </v-btn>
+        <v-spacer></v-spacer>
 
-        </v-app-bar>
-        
-        <NavigationDrawer :showDrawer="showDrawer" />
+        <v-btn
+            color="primary"
+            elevation="2">
+            Logout
+        </v-btn>
 
-    </div>   
+    </v-app-bar> 
 </template>
 
 <script>
-import NavigationDrawer from './NavigationDrawer.vue';
 export default {
-    components: { NavigationDrawer },
+    components: {  },
     data() {
         return {
-            showDrawer: false
+            showDrawer: true
         }
     },
     methods: {
@@ -47,9 +43,5 @@ export default {
 </script>
 
 <style scoped>
-
-.my-app-bar {
-    z-index: 900;
-}
 
 </style>
