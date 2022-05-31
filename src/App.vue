@@ -1,25 +1,27 @@
 <template>
-    <v-app>
-      <NavigationBar />
-      <v-main>
-        <ExamsData />
-      </v-main>
-    </v-app>
+  <v-app>
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
-<script>
-import NavigationBar from './components/common/NavigationBar.vue';
-import ExamsData from './components/exams/ExamsData.vue';
 
+<script>
 export default {
-    name: "App",
-    components: { NavigationBar, ExamsData },
-    data: () => ({
-    //
-    })
+  name: "App",
 };
 </script>
 
-<style>
-
+<style scoped>
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(216, 216, 216);
+  border-radius: 40px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
 </style>
