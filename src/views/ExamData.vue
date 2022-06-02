@@ -1,21 +1,15 @@
 <template>
-    <v-app>
-      <NavigationBar />
-      <v-main>
-        <ExamsData />
-      </v-main>
-    </v-app>
+  <ExamsData />      
 </template>
 
 
 
 <script>
-import NavigationBar from '../components/common/NavigationBar.vue';
 import ExamsData from '../components/exams/ExamsData.vue';
 
 export default {
     name: "Exam-Data",
-    components: { NavigationBar, ExamsData },
+    components: { ExamsData },
     data: () => ({
     //
     })
@@ -23,5 +17,9 @@ export default {
 </script>
 
 <style>
+
+v-main {
+    padding: 0px !important;
+}
 
 </style>

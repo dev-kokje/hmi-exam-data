@@ -1,9 +1,9 @@
 <template>
-    <v-row class="mt-4">
-        <v-col class="d-flex" xs="12" md="3">
+    <v-row class="">
+        <v-col class="d-flex" xs="12" md="4">
             <h1>Exam Data</h1>
         </v-col>
-        <v-col class="d-flex" xs="12" md="2">
+        <v-col class="d-flex" xs="12" md="1">
             <v-select
                 :items="semesters"
                 label="Semester"

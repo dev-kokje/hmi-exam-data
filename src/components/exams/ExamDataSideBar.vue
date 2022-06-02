@@ -24,7 +24,7 @@
         <h4 class="mt-2">Grade</h4>
         
         <v-select
-            v-model="e7"
+            v-model="gradeSelect"
             :items="ticksLabels"
             multiple
             chips
@@ -44,12 +44,20 @@
 <script>
 export default {
     data: () => ({
+        status: "left",
         ticksLabels: [
-          'Very Good (1 - 1.5)',
-          'Good (1.51 - 2.5)',
-          'Satisfactory (2.51 - 3.5)',
-          'Sufficient (3.51 - 4)',
-          'Insufficient (4.01 - 5)'
+            'Very Good (1 - 1.5)',
+            'Good (1.51 - 2.5)',
+            'Satisfactory (2.51 - 3.5)',
+            'Sufficient (3.51 - 4)',
+            'Insufficient (4.01 - 5)'
+        ],
+        gradeSelect: [
+            'Very Good (1 - 1.5)',
+            'Good (1.51 - 2.5)',
+            'Satisfactory (2.51 - 3.5)',
+            'Sufficient (3.51 - 4)',
+            'Insufficient (4.01 - 5)'
         ]
     })
 }
