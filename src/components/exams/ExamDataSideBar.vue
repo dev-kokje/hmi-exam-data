@@ -3,10 +3,8 @@
         <h4>Status</h4>
         <v-btn-toggle
             v-model="status"
-            tile
-            group
-            color="deep-purple accent-3"
-            shaped
+            color="primary"
+            class="my-4"
         >
             <v-btn value="left">
             ALL
@@ -22,15 +20,20 @@
         </v-btn-toggle>
 
         <h4 class="mt-2">Grade</h4>
+
+        <v-layout column wrap class="mb-5">
+            <v-flex v-for="grade in grades" v-bind:key="grade">
+                <v-checkbox
+                    v-model="gradeSelect"
+                    :label="grade"
+                    color="info"
+                    :value="grade"
+                    hide-details
+                    ></v-checkbox>
+            </v-flex>
+        </v-layout>
         
-        <v-select
-            v-model="gradeSelect"
-            :items="ticksLabels"
-            multiple
-            chips
-            persistent-hint
-            small-chips
-            ></v-select>
+        <v-divider></v-divider>
 
         <v-text-field
             v-model="message1"
@@ -45,7 +48,7 @@
 export default {
     data: () => ({
         status: "left",
-        ticksLabels: [
+        grades: [
             'Very Good (1 - 1.5)',
             'Good (1.51 - 2.5)',
             'Satisfactory (2.51 - 3.5)',

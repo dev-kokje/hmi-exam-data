@@ -1,48 +1,34 @@
 <template>
-    <v-row class="">
-        <v-col class="d-flex" xs="12" md="4">
-            <h1>Exam Data</h1>
-        </v-col>
-        <v-col class="d-flex" xs="12" md="1">
-            <v-select
-                :items="semesters"
-                label="Semester"
-                ></v-select>
-        </v-col>
-        <v-col class="d-flex" sm="12" md="3">
-            <v-select
-                :items="items"
-                label="Course"
-                ></v-select>
-        </v-col>
-        <v-col class="d-flex" sm="12" md="2">
-            <v-select
-                :items="exams"
-                label="Exam"
-                ></v-select>
-        </v-col>
-        <v-col class="d-flex justify-center" sm="12" md="2">
-            <v-btn
-                large
-                depressed
-                color="primary"
-                outlined
-                >
-                <v-icon class="px-2" dark>
-                    mdi-cloud-upload
-                </v-icon>
-                Add New File
-            </v-btn>
-        </v-col>
-    </v-row>
+    <v-sheet>
+        <v-row class="">
+            <v-col class="d-flex pl-5 pb-0">
+                <h1>Exam Data</h1>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col class="pt-0">
+                <v-tabs>
+                    <v-tab class="tab-text">01 View Exams</v-tab>
+                    <v-tab class="tab-text">02 Upload Exams</v-tab>
+                </v-tabs>
+            </v-col>
+        </v-row>
+    </v-sheet>
 </template>
 
 <script>
 export default {
     data: () => ({
-        semesters: ["WS21/22", "SS21/22", "WS22/23"],
-        items: ["HMI - Human Machine Interaction", "MobSys - Mobile Systems", "CI - Computational Intelligence"],
-        exams: ["Exam 1", "Exam 2", "Exam 3"]
+        tab: null,
+        items: [
+          'web', 'shopping', 'videos', 'images', 'news',
+        ],
     }),
 }
 </script>
+
+<style scoped>
+.tab-text {
+    text-transform: none !important;
+}
+</style>
