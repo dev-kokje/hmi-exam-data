@@ -7,9 +7,10 @@
         </v-row>
         <v-row>
             <v-col class="pt-0">
-                <v-tabs>
-                    <v-tab class="tab-text">01 View Exams</v-tab>
-                    <v-tab class="tab-text">02 Upload Exams</v-tab>
+                <v-tabs v-model="activeTab">
+                    <v-tab v-for="tab in tabList" :key="tab.id" class="tab-text" @click="onTabClick(tab.id)">
+                        {{tab.value}}
+                    </v-tab>
                 </v-tabs>
             </v-col>
         </v-row>
@@ -18,12 +19,20 @@
 
 <script>
 export default {
+    name : "ExamDataHeader",
     data: () => ({
-        tab: null,
-        items: [
-          'web', 'shopping', 'videos', 'images', 'news',
+        activeTab: 0,
+        tabList : [
+            {id : 0, value : "View Exams"},
+            {id : 1, value : "Upload Exams"},
         ],
     }),
+    methods: {
+        onTabClick(tabValue) {
+            this.activeTab = tabValue;
+            this.$emit('onTabClick', tabValue);
+        },
+    }
 }
 </script>
 
