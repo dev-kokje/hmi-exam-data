@@ -3,7 +3,7 @@
     <ExamDataHeader @onTabClick="toggleTab" />
     <v-divider />
 
-    <v-sheet elevation="2" class="my-10 mx-5 pa-5">
+    <v-sheet elevation="2" class="my-8 mx-5 px-5">
       <!-- TAB 1 -->
       <ExamsData class="mt-3" v-show="currTab == 0" />
       <!-- TAB 2 -->

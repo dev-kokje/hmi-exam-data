@@ -1,10 +1,34 @@
 <template>
     <div>
-        Result Details - Matrikelnummer 98574
-        <v-row class="py-2">
+        
+        <v-row class="">
+            <v-col md="2" class="pb-0">
+                <h3> {{ $t('examData.resultDetails.title') }} </h3>
+            </v-col>
+
+            <v-col md="2" class="pb-0">
+                <p> {{ $t('examData.resultDetails.semester') }}: 
+                    <span class="font-weight-bold">SS21</span>
+                </p>
+            </v-col>
+
+            <v-col md="4" class="pb-0">
+                <p> {{ $t('examData.resultDetails.course') }}: 
+                    <span class="font-weight-bold">HMI - Human Machine Interaction</span>
+                </p>
+            </v-col>
+
+            <v-col md="3" class="pb-0">
+                <p> {{ $t('examData.resultDetails.enrollment_number') }}: 
+                    <span class="font-weight-bold">313937</span>
+                </p>
+            </v-col>
+        </v-row>
+
+        <v-row class="pb-2">
             <v-col md="2">
                 <ResultDetailsCard 
-                    title="Total Questions"
+                    :title="$t('examData.resultDetails.chips.total_questions')"
                     count="50"
                     type="neutral"
                 />
@@ -12,7 +36,7 @@
 
             <v-col md="2">
                 <ResultDetailsCard 
-                    title="Correct"
+                    :title="$t('examData.resultDetails.chips.correct')"
                     count="30"
                     type="neutral"
                 />
@@ -20,7 +44,7 @@
 
             <v-col md="2">
                 <ResultDetailsCard 
-                    title="Incorrect"
+                    :title="$t('examData.resultDetails.chips.incorrect')"
                     count="20"
                     type="neutral"
                 />
@@ -28,7 +52,7 @@
 
             <v-col md="2">
                 <ResultDetailsCard 
-                    title="Score"
+                    :title="$t('examData.resultDetails.chips.score')"
                     count="60/100"
                     type="neutral"
                 />
@@ -36,7 +60,7 @@
 
             <v-col md="2">
                 <ResultDetailsCard 
-                    title="Pointer"
+                    :title="$t('examData.resultDetails.chips.pointer')"
                     count="3.7"
                     type="neutral"
                 />
@@ -44,7 +68,7 @@
 
             <v-col md="2">
                 <ResultDetailsCard 
-                    title="Result"
+                    :title="$t('examData.resultDetails.chips.result')"
                     count="Pass"
                     type="neutral"
                 />

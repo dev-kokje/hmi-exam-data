@@ -12,6 +12,8 @@
         <span>Sign Out</span>
         <v-icon right> mdi-logout </v-icon>
       </v-btn>
+
+      <LanguageSwitcher />
     </v-toolbar>
 
     <v-navigation-drawer v-model="drawer" text class="teal" app>
@@ -48,30 +50,32 @@
 </template>
 
 <script>
+import LanguageSwitcher from './LanguageSwitcher.vue';
 export default {
-  name: "NavBar",
-  data() {
-    return {
-      drawer: false,
-      links: [
-        {
-          icon: "mdi-view-dashboard",
-          text: "Dashboard",
-          route: "/pages/dashboard",
-        },
-        {
-          icon: "mdi-book-open",
-          text: "Exam Data",
-          route: "/pages/exam-data",
-        },
-      ],
-    };
-  },
-  methods: {
-    toggleMenu() {
-      this.drawer = !this.drawer;
+    name: "NavBar",
+    data() {
+        return {
+            drawer: false,
+            links: [
+                {
+                    icon: "mdi-view-dashboard",
+                    text: "Dashboard",
+                    route: "/pages/dashboard",
+                },
+                {
+                    icon: "mdi-book-open",
+                    text: "Exam Data",
+                    route: "/pages/exam-data",
+                },
+            ],
+        };
     },
-  },
+    methods: {
+        toggleMenu() {
+            this.drawer = !this.drawer;
+        },
+    },
+    components: { LanguageSwitcher }
 };
 </script>
 

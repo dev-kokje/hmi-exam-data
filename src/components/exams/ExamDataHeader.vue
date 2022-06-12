@@ -1,10 +1,10 @@
 <template>
     <v-sheet>
-        <v-row class="">
+        <!-- <v-row class="">
             <v-col class="d-flex pl-5 pb-0">
-                <h1>Exam Data</h1>
+                <h1>{{ $t('menu.exam_data_page_title') }}</h1>
             </v-col>
-        </v-row>
+        </v-row> -->
         <v-row>
             <v-col class="pt-0">
                 <v-tabs v-model="activeTab">
@@ -20,13 +20,19 @@
 <script>
 export default {
     name : "ExamDataHeader",
-    data: () => ({
-        activeTab: 0,
-        tabList : [
-            {id : 0, value : "View Exams"},
-            {id : 1, value : "Upload Exams"},
-        ],
-    }),
+    data() {
+        return {
+            activeTab: 0
+        }
+    },
+    computed: {
+        tabList() {
+            return [
+                {id : 0, value : this.$t('menu.exam_data_option_view_exams')},
+                {id : 1, value : this.$t('menu.exam_data_option_upload_exams')},
+            ]
+        }
+    },
     methods: {
         onTabClick(tabValue) {
             this.activeTab = tabValue;
@@ -40,4 +46,5 @@ export default {
 .tab-text {
     text-transform: none !important;
 }
+
 </style>
