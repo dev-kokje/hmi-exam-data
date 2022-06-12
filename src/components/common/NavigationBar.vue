@@ -43,5 +43,8 @@ export default {
 </script>
 
 <style scoped>
+.my-app-bar {
+    border-bottom: 1px solid #aaa;
+}
 
 </style>
