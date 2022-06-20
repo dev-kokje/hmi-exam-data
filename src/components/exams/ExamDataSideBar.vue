@@ -5,16 +5,17 @@
             v-model="status"
             color="primary"
             class="my-4"
+            @change="updateExamData"
         >
-            <v-btn small value="left">
+            <v-btn small value="All">
                 {{ $t('examData.sideBar.statuses.all') }}
             </v-btn>
 
-            <v-btn small value="center">
+            <v-btn small value="Pass">
                 {{ $t('examData.sideBar.statuses.pass') }}
             </v-btn>
 
-            <v-btn small value="right">
+            <v-btn small value="Fail">
                 {{ $t('examData.sideBar.statuses.fail') }}
             </v-btn>
         </v-btn-toggle>
@@ -37,10 +38,12 @@
         <v-divider></v-divider>
 
         <v-text-field
-            v-model="message1"
+            v-model="filterStudent"
             :label="$t('examData.sideBar.search_specific')"
             clearable
             outlined
+            @keyup="updateExamData"
+            @click:clear="updateExamData()"
         ></v-text-field>
 
         <v-card
@@ -52,10 +55,11 @@
             <v-list-item-group
                 v-model="selectedItem"
                 color="primary"
+                @change="selectStudent"
             >
                 <v-list-item
-                v-for="(matriculationNo, i) in matriculationNos"
-                :key="i"
+                    v-for="(matriculationNo, i) in matriculationNos"
+                    :key="i"
                 >
                 <v-list-item-content>
                     <v-list-item-title v-text="matriculationNo"></v-list-item-title>
@@ -69,29 +73,31 @@
 
 <script>
 export default {
-    data: () => ({
-        status: "left",
-        gradeSelect: [
-            'Very Good (1 - 1.5)',
-            'Good (1.51 - 2.5)',
-            'Satisfactory (2.51 - 3.5)',
-            'Sufficient (3.51 - 4)',
-            'Insufficient (4.01 - 5)'
-        ],
-        selectedItem: 1,
-        matriculationNos: [
-            '313931',
-            '313932',
-            '313933',
-            '313934',
-            '313935',
-            '313936',
-            '313937',
-            '313938',
-            '313939',
-            '313940',
-        ]
-    }),
+    props: {
+        examDataDetails: Array
+    },
+    data() {
+        return {
+            status: "All",
+            gradeSelect: [
+                'Very Good (1 - 1.5)',
+                'Good (1.51 - 2.5)',
+                'Satisfactory (2.51 - 3.5)',
+                'Sufficient (3.51 - 4)',
+                'Insufficient (4.01 - 5)'
+            ],
+            selectedItem: 1,
+            examData: this.examDataDetails,
+            filterStudent: ""
+        }
+    },
+    watch: {
+        examDataDetails: function(newVal, oldVal) {
+            console.log(oldVal)
+            this.examData = newVal
+            this.updateExamData()
+        }
+    },
     computed: {
         grades() {
             return (
@@ -103,6 +109,35 @@ export default {
                     this.$t('examData.sideBar.grades.in')
                 ]
             )
+        },
+        matriculationNos() {
+            let result = this.examData.map(exam => exam.enrollment_number)
+            return result
+        }
+    },
+    methods: {
+        updateExamData() {
+            console.log("Filter updated ", this.status)
+
+            let filterString = this.filterStudent
+
+            if(filterString !== null && filterString!=="") {
+                console.log("Filter string provided - ", filterString)
+                let result = this.examDataDetails.filter(exam => exam.enrollment_number.includes(filterString))
+                this.examData = result
+            } else {
+                let filterStatus = this.status
+                if(filterStatus === "All") {
+                    this.examData = this.examDataDetails
+                } else {
+                    let result = this.examDataDetails.filter(exam => exam.status == filterStatus)
+                    this.examData = result
+                }
+            }
+        },
+
+        selectStudent() {
+            this.$emit("studentSelect", this.matriculationNos[this.selectedItem])
         }
     }
 }
