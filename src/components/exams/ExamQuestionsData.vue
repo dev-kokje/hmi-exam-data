@@ -1,7 +1,10 @@
 <template>
     <div>
         
-        <div v-if="showContentTop">
+        <ExamDashboard v-if="showContentTop" />
+
+
+        <div v-if="showContentQuestions">
             <v-row class="">
                 <v-col md="2" class="pb-0">
                     <h3> {{ $t('examData.resultDetails.title') }} </h3>
@@ -78,11 +81,6 @@
 
             <v-divider></v-divider>
         </div>
-        <div v-else>
-            <v-row class="pa-5">
-                <h5>Please select course to display content</h5>
-            </v-row>
-        </div>
 
         <div  v-if="showContentQuestions">
             <v-row>
@@ -101,11 +99,6 @@
                 </v-col>
             </v-row>
         </div>
-        <div v-else-if="showContentTop">
-            <v-row class="pa-5">
-                <h5>Please select student enrollment number to display content</h5>
-            </v-row>
-        </div>
 
     </div>    
 </template>
@@ -114,9 +107,10 @@
 
 import ResultDetailsCard from './components/ResultDetailsCard.vue'
 import QuestionCard from './components/QuestionCard.vue'
+import ExamDashboard from './ExamDashboard.vue'
 
 export default {
-    components: { ResultDetailsCard, QuestionCard },
+    components: { ResultDetailsCard, QuestionCard, ExamDashboard },
     props: {
         examData: Object,
         selectedExamResultData: Object,
@@ -135,6 +129,7 @@ export default {
                 this.maxPoints = newVal.maximum_points
                 this.enrollmentNumber = newVal.enrollment_number
                 this.showContentTop = true
+                this.showContentQuestions = false
             }
         },
 
@@ -156,6 +151,7 @@ export default {
                 this.incorrectAns = (parseInt(this.totalQuestions) - parseInt(newVal.correct_answers)).toString()
                 this.enrollmentNumber = newVal.enrollment_number
                 this.showContentQuestions = true
+                this.showContentTop = false
             }
         }
     },
