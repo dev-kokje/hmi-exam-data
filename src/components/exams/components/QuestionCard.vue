@@ -15,12 +15,23 @@
                         >
                             {{ qus.type }}
                     </v-chip>
-                    Points: 
+                    Points:
+                    <v-text-field
+                        v-model="points"
+                        outlined
+                        dense
+                        class="my-1 pa-0 edit-point"
+                        :suffix="'/'.concat(qus.maxPoints)"
+                        v-if="editPoints"
+                        @focusout="changePoints"
+                    ></v-text-field>
                     <v-chip
                         outlined
                         class="ma-2"
                         color=""
                         label
+                        v-else
+                        @click="changePoints"
                         >
                             {{ qus.points }}/{{ qus.maxPoints }}
                     </v-chip>
@@ -50,16 +61,20 @@
 
 <script>
 export default {
+    data: () => ({
+        editPoints: false,
+        points: 0
+    }),
     props: {
         correctAns: Boolean,
-        questionData: {
-            number: Number,
-            question: String,
-            type: String,
-            correctAnswer: String,
-            givenAnswer: String,
-            maxPoints: Number,
-            points: Number
+        questionData: Object
+    },
+    watch: {
+        questionData: function(oldVal, newVal) {
+            oldVal
+            console.output(oldVal)
+            console.output(newVal)
+            this.points = newVal.points
         }
     },
     computed: {
@@ -79,6 +94,11 @@ export default {
                 return "warning"
             }
         }
+    },
+    methods: {
+        changePoints() {
+            this.editPoints = !this.editPoints
+        }
     }
 }
 </script>
@@ -95,5 +115,9 @@ export default {
     }
     .green-background {
         background-color: #e9f9e6;
+    }
+    .edit-point {
+        max-width: 60px;
+        text-align: center;
     }
 </style>
