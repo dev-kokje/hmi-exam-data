@@ -3,7 +3,7 @@
     <!-- select fields -->
     <v-row align="center" justify="start">
       <!-- select semester -->
-      <v-col lg="3" md="4" sm="6" xs="12">
+      <v-col xl="2" lg="3" md="6" sm="12" xs="12" cols="12">
         <v-select
           v-model="selectSemester"
           :items="semesterList"
@@ -14,7 +14,7 @@
         ></v-select>
       </v-col>
       <!-- select year -->
-      <v-col lg="3" md="4" sm="6" xs="12">
+      <v-col xl="2" lg="3" md="6" sm="12" xs="12" cols="12">
         <v-menu
           ref="menu"
           v-model="menu"
@@ -50,11 +50,19 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
+      <!-- select course -->
+      <v-col xl="2" lg="3" md="6" sm="12" xs="12" cols="12">
+        <v-select
+          v-model="selectCourse"
+          :items="courseList"
+          label="Select Course"
+        ></v-select>
+      </v-col>
     </v-row>
 
     <!-- File Upload Button -->
     <v-row align="center" justify="end">
-      <!-- :disabled="isUploading || files.length == 0" -->
+      <!-- :disabled="isUploading || fileList.length == 0" -->
       <v-btn
         class="mr-2 white--text"
         :loading="isUploading"
@@ -68,7 +76,7 @@
     </v-row>
 
     <!-- select files -->
-    <v-row align="center" justify="center" v-if="files.length == 0">
+    <v-row align="center" justify="center" v-if="fileList.length == 0">
       <v-col cols="12" sm="10" md="10">
         <div class="card-heading">
           <h2 class="teal--text">File Upload & Preview</h2>
@@ -110,17 +118,22 @@
     </v-row>
 
     <!-- upload files listing -->
-    <v-row v-if="files.length > 0">
+    <v-row v-if="fileList.length > 0">
       <v-col>
         <v-subheader>Preview Files</v-subheader>
         <v-list subheader two-line>
-          <v-list-item v-for="(item, index) in files" :key="item.name">
+          <v-list-item
+            v-for="(item, index) in fileList"
+            v-bind:key="item.name + '-' + index"
+          >
             <v-list-item-avatar>
               <v-icon color="black"> mdi-file </v-icon>
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
+              <v-list-item-title
+                v-text="item.name + '-' + index"
+              ></v-list-item-title>
 
               <v-list-item-subtitle
                 v-text="item.size / 1000000 + ' MB'"
@@ -142,22 +155,30 @@
 <script>
 export default {
   name: "UploadExam",
-  created: {},
-  data: () => ({
-    selectSemester: { id: 0, value: "Winter Semester" },
-    semesterList: [
-      { id: 0, value: "Winter Semester" },
-      { id: 1, value: "Summer Semester" },
-    ],
+  data() {
+    return {
+      selectSemester: { id: 0, value: "Winter Semester" },
+      semesterList: [
+        { id: 0, value: "Winter Semester" },
+        { id: 1, value: "Summer Semester" },
+      ],
 
-    activePicker: null,
-    date: null,
-    menu: false,
-    displayedDate: "2022",
+      selectCourse: "HMI - Human Machine Interaction",
+      courseList: [
+        "HMI - Human Machine Interaction",
+        "3DCC - 3D Content Creation",
+        "CI - Computational Intelligence",
+      ],
 
-    files: [],
-    isUploading: false,
-  }),
+      activePicker: null,
+      date: null,
+      menu: false,
+      displayedDate: "2022",
+
+      fileList: [],
+      isUploading: false,
+    };
+  },
   methods: {
     save(date) {
       this.$refs.menu.save(date);
@@ -167,24 +188,20 @@ export default {
     },
     handleFileUpload(event) {
       let files = event.target.files;
-      this.files = Array.from(files); // convert theFileList to array
+      this.fileList = Array.from(files); // convert theFileList to array
     },
     submitFiles() {
       if (this.isUploading) return;
       this.isUploading = true;
-
       let formData = new FormData();
-      for (var i = 0; i < this.files.length; i++) {
-        let file = this.files[i];
+      for (var i = 0; i < this.fileList.length; i++) {
+        let file = this.fileList[i];
         formData.append("files[" + i + "]", file);
       }
-      console.log("formData=>", formData);
     },
     removeFile(index) {
-      this.$delete(this.files, index);
-      //   console.log(index);
-      //   this.files = this.files.filter((item, id) => id !== index);
-      //   this.$forceUpdate();
+      this.fileList.splice(index, 1);
+      this.$forceUpdate();
     },
   },
   watch: {

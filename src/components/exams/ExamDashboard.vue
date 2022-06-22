@@ -59,8 +59,11 @@
         <v-divider></v-divider>
 
         <v-row class="py-4">
-            <v-col md="12">
-                Test
+            <v-col xl="4" lg="4" md="6" sm="12" xs="12" cols="12">
+                <PointerDistribution :baseMark="50" />
+            </v-col>
+            <v-col xl="4" lg="4" md="6" sm="12" xs="12" cols="12">
+                <StudentDistribution :baseMark="50" />
             </v-col>
         </v-row>
 
@@ -69,8 +72,13 @@
 </template>
 
 <script>
+import PointerDistribution from './components/PointerDistribution.vue';
+import StudentDistribution from './components/StudentDistribution.vue';
 export default {
-    
+    components : {
+        PointerDistribution,
+        StudentDistribution,
+    }
 }
 </script>
 
