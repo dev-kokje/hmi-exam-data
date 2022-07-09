@@ -34,6 +34,7 @@ export default {
             score: "Score",
             pointer: "Pointer",
             result: "Result"
-        }
+        },
+        infomessage: "Please select enrollment number from sidebar to view student specific details."
     }
 }

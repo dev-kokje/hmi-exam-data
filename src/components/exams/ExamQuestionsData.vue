@@ -1,88 +1,83 @@
 <template>
     <div>
-        
-        <ExamDashboard v-if="showContentTop" />
 
+        <v-tabs 
+            background-color="#fafafa"
+            light>
+            <v-tab 
+                class="tab-text"
+                @click="toggleTab(1)">
+                Exam Details
+            </v-tab>
+            <v-tab 
+                class="tab-text"
+                @click="toggleTab(2)"
+                :disabled="!studentIdSelectedProp">
+                Student Specific Details
+            </v-tab>
+        </v-tabs>
 
-        <div v-if="showContentQuestions">
-            <v-row class="">
-                <v-col md="2" class="pb-0">
-                    <h3> {{ $t('examData.resultDetails.title') }} </h3>
-                </v-col>
+        <v-divider></v-divider>
 
-                <v-col md="2" class="pb-0">
-                    <p> {{ $t('examData.resultDetails.semester') }}: 
-                        <span class="font-weight-bold"> {{ semesterString }} </span>
+        <ExamDashboard class="mt-2" v-show="currentTab==1" />
+
+        <div v-show="currentTab==2">
+            <v-row class="mt-2">
+                <v-col md="2" class="pb-0 ml-1">
+                    <p> {{ $t('examData.resultDetails.semester') }}:
+                        <span class="font-weight-bold"> {{ examData.semester.name }} </span>
                     </p>
                 </v-col>
 
                 <v-col md="4" class="pb-0">
-                    <p> {{ $t('examData.resultDetails.course') }}: 
-                        <span class="font-weight-bold"> {{ courseString }} </span>
+                    <p> {{ $t('examData.resultDetails.course') }}:
+                        <span class="font-weight-bold"> {{ examData.course.displayName }} </span>
                     </p>
                 </v-col>
 
-                <v-col md="3" class="pb-0">
-                    <p> {{ $t('examData.resultDetails.enrollment_number') }}: 
-                        <span class="font-weight-bold"> {{ enrollmentNumber }} </span>
+                <v-col md="4" class="pb-0">
+                    <p> {{ $t('examData.resultDetails.enrollment_number') }}:
+                        <span class="font-weight-bold"> {{ examResultDataProp.student_id }} </span>
                     </p>
                 </v-col>
             </v-row>
 
             <v-row class="pb-2">
                 <v-col md="2">
-                    <ResultDetailsCard 
-                        :title="$t('examData.resultDetails.chips.total_questions')"
-                        :count="totalQuestions"
-                        type="neutral"
-                    />
+                    <ResultDetailsCard :title="$t('examData.resultDetails.chips.total_questions')"
+                        :count="examQuestionsMetaData.totalQuestions" type="neutral" />
                 </v-col>
 
                 <v-col md="2">
-                    <ResultDetailsCard 
-                        :title="$t('examData.resultDetails.chips.correct')"
-                        :count="correctAns"
-                        type="neutral"
-                    />
+                    <ResultDetailsCard :title="$t('examData.resultDetails.chips.correct')" :count="examQuestionsMetaData.correctAns"
+                        type="neutral" />
                 </v-col>
 
                 <v-col md="2">
-                    <ResultDetailsCard 
-                        :title="$t('examData.resultDetails.chips.incorrect')"
-                        :count="incorrectAns"
-                        type="neutral"
-                    />
+                    <ResultDetailsCard :title="$t('examData.resultDetails.chips.incorrect')" :count="examQuestionsMetaData.incorrectAns"
+                        type="neutral" />
                 </v-col>
 
                 <v-col md="2">
-                    <ResultDetailsCard 
-                        :title="$t('examData.resultDetails.chips.score')"
-                        :count="displayScore"
-                        type="neutral"
-                    />
+                    <ResultDetailsCard :title="$t('examData.resultDetails.chips.score')" :count="displayScore"
+                        type="neutral" />
                 </v-col>
 
                 <v-col md="2">
-                    <ResultDetailsCard 
-                        :title="$t('examData.resultDetails.chips.pointer')"
-                        :count="pointer"
-                        type="neutral"
-                    />
+                    <ResultDetailsCard :title="$t('examData.resultDetails.chips.pointer')" :count="examQuestionsMetaData.pointer"
+                        type="neutral" />
                 </v-col>
 
                 <v-col md="2">
-                    <ResultDetailsCard 
-                        :title="$t('examData.resultDetails.chips.result')"
-                        :count="resultStatus"
-                        type="neutral"
-                    />
+                    <ResultDetailsCard :title="$t('examData.resultDetails.chips.result')" :count="examQuestionsMetaData.resultStatus"
+                        type="neutral" />
                 </v-col>
             </v-row>
 
             <v-divider></v-divider>
         </div>
 
-        <div  v-if="showContentQuestions">
+        <div v-show="currentTab==2">
             <v-row>
                 <v-col md="12">
                     <p class="mt-2 mb-0">Questions</p>
@@ -91,16 +86,12 @@
 
             <v-row>
                 <v-col md="12" class="questions-sheet">
-                    <QuestionCard
-                        v-for="qus in questions"
-                        :key="qus.number"
-                        :questionData="qus"
-                    ></QuestionCard>
+                    <QuestionCard v-for="qus in examQuestionsData" :key="qus._id" :questionDataProp="qus"></QuestionCard>
                 </v-col>
             </v-row>
         </div>
 
-    </div>    
+    </div>
 </template>
 
 <script>
@@ -112,117 +103,70 @@ import ExamDashboard from './ExamDashboard.vue'
 export default {
     components: { ResultDetailsCard, QuestionCard, ExamDashboard },
     props: {
-        examData: Object,
-        selectedExamResultData: Object,
-        semesterString: String,
-        courseString: String
+        examDataProp: Object,
+        examQuestionsDataProp: Array,
+        studentIdSelectedProp: Boolean,
+        examResultDataProp: Object
     },
     watch: {
-        examData: function(newVal, oldVal) {
-            oldVal
-            if(newVal === null) {
-                this.totalQuestions = "0"
-                this.maxPoints = "0"
-                this.showContentTop = false
-            } else {
-                this.totalQuestions = newVal.total_questions,
-                this.maxPoints = newVal.maximum_points
-                this.enrollmentNumber = newVal.enrollment_number
-                this.showContentTop = true
-                this.showContentQuestions = false
+        studentIdSelectedProp(newVal, oldVal) {
+            if(newVal != oldVal) {
+                this.currentTab = 2
             }
-        },
-
-        selectedExamResultData: function(newVal, oldVal) {
-            oldVal
-            if(newVal === null) {
-                this.correctAns = "0"
-                this.scoredPoints = "0"
-                this.pointer = "0"
-                this.resultStatus = "NA"
-                this.incorrectAns="0"
-                this.enrollmentNumber = ""
-                this.showContentQuestions = false
-            } else {
-                this.correctAns = newVal.correct_answers
-                this.scoredPoints = newVal.scored_points
-                this.pointer = newVal.pointer
-                this.resultStatus = newVal.status
-                this.incorrectAns = (parseInt(this.totalQuestions) - parseInt(newVal.correct_answers)).toString()
-                this.enrollmentNumber = newVal.enrollment_number
-                this.showContentQuestions = true
-                this.showContentTop = false
-            }
-        }
+        }        
     },
     computed: {
         displayScore() {
-            return this.scoredPoints.concat("/").concat(this.maxPoints) 
+            return this.examResultDataProp.scored_points + "/" + this.examData.maxPoints
+        },
+        examQuestionsMetaData() {
+            let result = {}
+            result.totalQuestions = this.examQuestionsDataProp.length + ""
+            result.correctAns = this.examQuestionsDataProp.filter(examQuestion => examQuestion.scored_points > 0).length + ""
+            result.incorrectAns = result.totalQuestions - result.correctAns + ""
+            result.pointer = this.examResultDataProp.pointer + ""
+            result.resultStatus = this.examResultDataProp.status
+            return result
         }
     },
-    data: () => ({
-        showContentTop: false,
-        showContentQuestions: false,
-        enrollmentNumber: "",
-        correctAns: "0",
-        scoredPoints: "0",
-        pointer: "0",
-        resultStatus: "NA",
-        totalQuestions: "0",
-        maxPoints: "0",
-        incorrectAns: "0",
-        questions: [
-            {
-                number: 1,
-                question: "Das Projektbudget für ein 10-Monate-Projekt beträgt 1.000.000€ (PK, geplante Kosten). Es war geplant, dass jeden Monat jeweils genau 10% der Arbeiten abgeschlossen werden. Nach fünf Monaten repräsentieren die abgeschlossenen Arbeit 40% des Gesamtumfangs aller Arbeiten. Wie hoch ist der Fertigstellungswert zu diesem Zeitpunkt?",
-                type: "SA",
-                correctAnswer: "400000€",
-                givenAnswer: "400000€",
-                maxPoints: 1,
-                points: 1,
-                right: true
-            },
-            {
-                number: 2,
-                question: "Das Projektbudget für ein 12-Monate-Projekt beträgt 1.200.000€ (PK, geplante Kosten). Die Kosten verteilen sich gleichmäßig über den gesamten Zeitraum. Nach sechs Monaten repräsentieren die abgeschlossenen Arbeit 60% des Gesamtumfangs aller Arbeiten. Die bis dahin angefallenen Kosten betragen 400.000€. Berechnen Sie den Kostenleistungsindex (KLI/CPI).",
-                type: "SA",
-                correctAnswer: "1,8",
-                givenAnswer: "",
-                maxPoints: 2,
-                points: 0,
-                right: false
-            },
-            {
-                number: 3,
-                question: "Die PMO-Datenbank weist für eine bestimmte Aktivität folgende Kostenschätzungen aus: optimistisch: 100€, wahrscheinlich: 250€, pessimistisch: 400€. Welchen Kostenansatz liefert die parametrische Schätzung nach der Beta-Verteilung.",
-                type: "SA",
-                correctAnswer: "250€",
-                givenAnswer: "250€",
-                maxPoints: 2,
-                points: 2,
-                right: true
-            },
-            {
-                number: 4,
-                question: "Welche Aussagen zum Kritischen Pfad sind nicht richtig?",
-                type: "PM",
-                correctAnswer: "Der Kritische Pfad zeigt die Dauer an, die das Projekt höchstens haben wird.;Der freie Puffer einer einzelnen Aktivität auf dem Kritischen Pfad kann größer als null sein.",
-                givenAnswer: "Der Kritische Pfad zeigt die Dauer an, die das Projekt höchstens haben wird.; Der Kritische Pfad ist der längste aller Pfade durch ein Projekt.",
-                maxPoints: 2,
-                points: 0,
-                right: false
-            }
-        ]
-    })
+    updated() {
+        console.log(this.examData)
+    },
+    data() {
+
+        return {
+            examData: {...this.examDataProp},
+            examQuestionsData: {...this.examQuestionsDataProp},
+            currentTab: 1,
+            showContentTop: false,
+            showContentQuestions: false,
+            enrollmentNumber: "",
+            correctAns: "0",
+            scoredPoints: "0",
+            pointer: "0",
+            resultStatus: "NA",
+            totalQuestions: "0",
+            maxPoints: "0",
+            incorrectAns: "0",
+        }
+    },
+    methods: {
+        toggleTab(val) {
+            this.currentTab = val
+            console.log("Student questions data - ", this.examQuestionsData)
+        }
+    }
 }
 </script>
 
 <style scoped>
- .questions-sheet {
+.questions-sheet {
     max-height: 65vh;
     overflow-y: scroll;
     scrollbar-width: thin;
     scrollbar-color: #2196F3;
- }
-
+}
+.tab-text {
+    text-transform: none !important;
+}
 </style>

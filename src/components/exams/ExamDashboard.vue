@@ -2,13 +2,14 @@
     
     <div>
 
-        <v-alert
+        <!-- <v-alert
             type="info"
             elevation="2"
             dense
+            outlined
             >
-            Please select enrollment number from sidebar to view student specific details.
-        </v-alert>
+            {{ $t('examData.resultDetails.infomessage') }}
+        </v-alert> -->
 
         <v-row class="pb-4">
             <v-col md="12">

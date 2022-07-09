@@ -6,11 +6,22 @@
         </v-col>
 
         <v-col md="2" align-self="center">
-            <v-select v-model="semester" :items="semestersList" :label="$t('examData.topBar.semester')"></v-select>
+            <v-select 
+                v-model="semester" 
+                :items="semestersList" 
+                item-text="name"
+                item-value="_id"
+                :label="$t('examData.topBar.semester')"
+                @change="fetchCoursesForSemester">
+                </v-select>
         </v-col>
 
         <v-col md="3" align-self="center">
-            <v-select v-model="course" :items="coursesList" :label="$t('examData.topBar.course')"></v-select>
+            <v-select v-model="course" 
+                :items="coursesList" 
+                item-text="displayName"
+                item-value="_id"
+                :label="$t('examData.topBar.course')"></v-select>
         </v-col>
 
         <v-col md="1" align-self="center">
@@ -25,15 +36,8 @@
 export default {
     data: () => ({
         semestersList: [
-            "SS21",
-            "WS21",
-            "SS22",
-            "WS22"
         ],
         coursesList: [
-            "HMI - Human Machine Interaction",
-            "3DCC - 3D Content Creation",
-            "CI - Computational Intelligence"
         ],
         semester: "",
         course: "",
@@ -42,10 +46,30 @@ export default {
         searchCourseData() {
             console.log("Selected semester and course - ", this.semester, this.course)
             this.$emit("examData", {
-                semester: this.semester,
-                course: this.course
+                semester: this.semestersList.find(sem => sem._id === this.semester),
+                course: this.coursesList.find(cor => cor._id === this.course)
             })
+        },
+        fetchCoursesForSemester() {
+            let semesterId = this.semester
+            const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/sem-subjects/${semesterId}`
+            this.$http
+                .get(baseUrl)
+                .then((results) => {
+                    this.coursesList = results.data.Data
+                    this.coursesList.map((course) => {
+                        course.displayName = course.code + " - " + course.name
+                    })
+                })
         }
+    },
+    mounted() {
+        const baseUrl = "https://sleepy-meadow-31578.herokuapp.com/api/sem"
+        this.$http
+            .get(baseUrl)
+            .then((results) => {
+                this.semestersList = results.data.Data
+            })
     }
 }
 </script>

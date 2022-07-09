@@ -13,7 +13,7 @@
                         label
                         text-color="white"
                         >
-                            {{ qus.type }}
+                            {{ qus.question_type }}
                     </v-chip>
                     Points:
                     <v-text-field
@@ -33,7 +33,7 @@
                         v-else
                         @click="changePoints"
                         >
-                            {{ qus.points }}/{{ qus.maxPoints }}
+                            {{ qus.scored_points }}/{{ qus.maximum_points }}
                     </v-chip>
                 </v-col>
                 <v-divider
@@ -46,10 +46,10 @@
                             </p>
                             <p>
                                 <span class="green-text">Correct Answer</span> 
-                                - {{ qus.correctAnswer }}</p>
+                                - {{ qus.correct_answer }}</p>
                             <p>
                                 <span class="blue-text">Given Answer</span>
-                                 - {{ qus.givenAnswer }}</p>
+                                 - {{ qus.given_answer }}</p>
                         </v-col>
                     </v-row>
                     
@@ -61,25 +61,21 @@
 
 <script>
 export default {
-    data: () => ({
-        editPoints: false,
-        points: 0
-    }),
+    data() {
+        return {
+            questionData: {...this.questionDataProp},
+            editPoints: false,
+            points: 0
+        }
+    },
     props: {
         correctAns: Boolean,
-        questionData: Object
-    },
-    watch: {
-        questionData: function(oldVal, newVal) {
-            oldVal
-            console.output(oldVal)
-            console.output(newVal)
-            this.points = newVal.points
-        }
+        questionDataProp: Object
     },
     computed: {
         classes() {
-            let cls = this.questionData.right===true ? "green-background" : "red-background"
+
+            let cls = this.questionData.scored_points > 0 ? "green-background" : "red-background"
             return cls + " my-2"
         },
         qus() {

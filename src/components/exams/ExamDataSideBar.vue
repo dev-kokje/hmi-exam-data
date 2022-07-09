@@ -24,6 +24,7 @@
 
         <v-layout column wrap class="mb-5">
             <v-flex v-for="grade in grades" v-bind:key="grade">
+
                 <v-checkbox
                     v-model="gradeSelect"
                     :label="grade"
@@ -58,12 +59,14 @@
                 @change="selectStudent"
             >
                 <v-list-item
-                    v-for="(matriculationNo, i) in matriculationNos"
+                    v-for="(examResult, i) in examData.examResults"
                     :key="i"
+                    :value="examResult._id"
                 >
-                <v-list-item-content>
-                    <v-list-item-title v-text="matriculationNo"></v-list-item-title>
-                </v-list-item-content>
+                    <v-list-item-content>
+                        <v-list-item-title 
+                            v-text="examResult.student_id"></v-list-item-title>
+                    </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
             </v-list>
@@ -74,7 +77,7 @@
 <script>
 export default {
     props: {
-        examDataDetails: Array
+        examDataProp: Object
     },
     data() {
         return {
@@ -87,15 +90,8 @@ export default {
                 'Insufficient (4.01 - 5)'
             ],
             selectedItem: 1,
-            examData: this.examDataDetails,
-            filterStudent: ""
-        }
-    },
-    watch: {
-        examDataDetails: function(newVal, oldVal) {
-            console.log(oldVal)
-            this.examData = newVal
-            this.updateExamData()
+            filterStudent: "",
+            examData: {...this.examDataProp}
         }
     },
     computed: {
@@ -109,35 +105,16 @@ export default {
                     this.$t('examData.sideBar.grades.in')
                 ]
             )
-        },
-        matriculationNos() {
-            let result = this.examData.map(exam => exam.enrollment_number)
-            return result
         }
     },
     methods: {
         updateExamData() {
             console.log("Filter updated ", this.status)
-
-            let filterString = this.filterStudent
-
-            if(filterString !== null && filterString!=="") {
-                console.log("Filter string provided - ", filterString)
-                let result = this.examDataDetails.filter(exam => exam.enrollment_number.includes(filterString))
-                this.examData = result
-            } else {
-                let filterStatus = this.status
-                if(filterStatus === "All") {
-                    this.examData = this.examDataDetails
-                } else {
-                    let result = this.examDataDetails.filter(exam => exam.status == filterStatus)
-                    this.examData = result
-                }
-            }
         },
 
         selectStudent() {
-            this.$emit("studentSelect", this.matriculationNos[this.selectedItem])
+            console.log("Selected student id - ", this.selectedItem)
+            this.$emit("studentSelect", this.selectedItem)
         }
     }
 }

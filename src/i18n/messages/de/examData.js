@@ -34,6 +34,7 @@ export default {
             score: "Punktzahl",
             pointer: "Zeiger",
             result: "Ergebnis"
-        }
+        },
+        infomessage: "Bitte wählen Sie die Einschreibungsnummer in der Seitenleiste aus, um schülerspezifische Details anzuzeigen." 
     }
 }
