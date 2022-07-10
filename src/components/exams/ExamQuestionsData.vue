@@ -7,13 +7,19 @@
             <v-tab 
                 class="tab-text"
                 @click="toggleTab(1)">
-                Exam Details
+                Exam Dashboard
             </v-tab>
             <v-tab 
                 class="tab-text"
-                @click="toggleTab(2)"
+                @click="toggleTab(2)">
+                Downloads
+            </v-tab>
+            <v-tab 
+                class="tab-text"
+                @click="toggleTab(3)"
                 :disabled="!studentIdSelectedProp">
                 Student Specific Details
+                <!-- <span v-show="studentIdSelectedProp"> {{ examResultDataProp.student_id }} </span> -->
             </v-tab>
         </v-tabs>
 
@@ -21,7 +27,9 @@
 
         <ExamDashboard class="mt-2" v-show="currentTab==1" :examDataProp="examDataProp" />
 
-        <div v-show="currentTab==2">
+        <ExamDownloads :examDataProp="examData" v-show="currentTab==2" />
+
+        <div v-show="currentTab==3">
             <v-row class="mt-2">
                 <v-col md="2" class="pb-0 ml-1">
                     <p> {{ $t('examData.resultDetails.semester') }}:
@@ -77,7 +85,7 @@
             <v-divider></v-divider>
         </div>
 
-        <div v-show="currentTab==2">
+        <div v-show="currentTab==3">
             <v-row>
                 <v-col md="12">
                     <p class="mt-2 mb-0">Questions</p>
@@ -99,9 +107,10 @@
 import ResultDetailsCard from './components/ResultDetailsCard.vue'
 import QuestionCard from './components/QuestionCard.vue'
 import ExamDashboard from './ExamDashboard.vue'
+import ExamDownloads from './ExamDownloads.vue'
 
 export default {
-    components: { ResultDetailsCard, QuestionCard, ExamDashboard },
+    components: { ResultDetailsCard, QuestionCard, ExamDashboard, ExamDownloads },
     props: {
         examDataProp: Object,
         examQuestionsDataProp: Array,
@@ -140,14 +149,7 @@ export default {
             currentTab: 1,
             showContentTop: false,
             showContentQuestions: false,
-            enrollmentNumber: "",
-            correctAns: "0",
-            scoredPoints: "0",
-            pointer: "0",
-            resultStatus: "NA",
-            totalQuestions: "0",
-            maxPoints: "0",
-            incorrectAns: "0",
+            enrollmentNumber: ""
         }
     },
     methods: {

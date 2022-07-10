@@ -21,7 +21,7 @@
                         outlined
                         dense
                         class="my-1 pa-0 edit-point"
-                        :suffix="'/'.concat(qus.maxPoints)"
+                        :suffix="'/'.concat(qus.maximum_points)"
                         v-if="editPoints"
                         @focusout="changePoints"
                     ></v-text-field>

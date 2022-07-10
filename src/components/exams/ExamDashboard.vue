@@ -1,14 +1,15 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <div>
-    <!-- <v-alert
+    
+    <div>
+
+        <v-alert
             type="info"
             elevation="2"
             dense
-            outlined
             >
             {{ $t('examData.resultDetails.infomessage') }}
-        </v-alert> -->
+        </v-alert>
 
     <v-row class="pb-4">
       <v-col md="12">
