@@ -3,14 +3,14 @@
     <v-subheader class="grey--text darken-5">Pointer Distribution</v-subheader>
 
     <v-container fluid>
-      <v-simple-table dense fixed-header height="300px">
+      <v-simple-table dense fixed-header height="400px">
         <template v-slot:default>
           <thead>
             <tr>
-              <th class="text-left">Marks</th>
-              <th class="text-left">Pointer</th>
-              <th class="text-left">Number of Student</th>
-              <th class="text-left">Grade Range</th>
+              <th class="text-center">Marks</th>
+              <th class="text-center">Pointer</th>
+              <th class="text-center">Number of Student</th>
+              <th class="text-center">Grade Range</th>
             </tr>
           </thead>
           <tbody>
@@ -19,10 +19,12 @@
               :key="item.marks"
               :class="getBG(item.gradeRange)"
             >
-              <td>{{ item.marks }}</td>
-              <td>{{ item.pointer }}</td>
-              <td>{{ item.studentCount }}</td>
-              <td>{{ item.gradeRange }}</td>
+              <td class="text-center">{{ item.marks }} and above</td>
+              <td class="text-center">
+                {{ item.lowerBracket }} - {{ item.upperBracket }}
+              </td>
+              <td class="text-center">{{ item.studentCount }}</td>
+              <td class="text-center">{{ item.gradeRange }}</td>
             </tr>
           </tbody>
         </template>
@@ -32,10 +34,12 @@
 </template>
 
 <script>
-/* eslint-disable no-debugger */
 export default {
   name: "PointerDistribution",
-  props: ["baseMark"],
+  props: {
+    baseMark: Number,
+    examDataProp: Object,
+  },
   data() {
     return {
       pointerDistribution: [],
@@ -54,22 +58,62 @@ export default {
       }
       return "insufficient";
     },
+    getStudentCount(min, max) {
+      if (this.examDataProp && this.examDataProp.examResults) {
+        let arr = this.examDataProp.examResults.filter(
+          (obj) => obj.pointer >= min && obj.pointer <= max
+        );
+        return arr.length;
+      } else {
+        return 0;
+      }
+    },
     updatePointerDistribution() {
       this.pointerDistribution = [];
       let increment = Number(Number((100 - this.baseMark) / 10).toFixed(0));
+      let deltaJFlag = 1;
+
       for (
         let i = this.baseMark, j = 4;
         i <= 100, j >= 1;
-        i += increment, j -= 0.3
+        i += increment, j -= deltaJFlag % 3 == 0 ? 0.4 : 0.3
       ) {
         let obj = {
           marks: Number(Number(i).toFixed(0)),
-          pointer: Number(Number(j).toFixed(1)),
-          studentCount: 10,
           gradeRange: this.getGradeRange(Number(Number(j).toFixed(1))),
+          upperBracket: Number(Number(j).toFixed(1)),
         };
         this.pointerDistribution.unshift(obj);
+        deltaJFlag++;
+        deltaJFlag = deltaJFlag % 3;
       }
+
+      //  get lower and upper brackets
+      this.pointerDistribution.forEach((obj, index) => {
+        if (index < this.pointerDistribution.length - 1) {
+          let nextObject = this.pointerDistribution[index + 1];
+          obj["lowerBracket"] = obj["upperBracket"];
+          if (index > 0) {
+            obj["lowerBracket"] = Number(
+              Number(obj["lowerBracket"] + 0.01).toFixed(2)
+            );
+          }
+          obj["upperBracket"] = nextObject["upperBracket"];
+        }
+        if (index == this.pointerDistribution.length - 1) {
+          obj["lowerBracket"] = obj["upperBracket"];
+          obj["upperBracket"] = 5;
+        }
+      });
+
+      // add student count
+      this.pointerDistribution.forEach((obj) => {
+        obj["studentCount"] = this.getStudentCount(
+          Number(obj.lowerBracket),
+          Number(obj.upperBracket)
+        );
+      });
+    
     },
     getBG(range) {
       if (range == "very good") return "green accent-2";

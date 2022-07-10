@@ -19,7 +19,7 @@
 
         <v-divider></v-divider>
 
-        <ExamDashboard class="mt-2" v-show="currentTab==1" />
+        <ExamDashboard class="mt-2" v-show="currentTab==1" :examDataProp="examDataProp" />
 
         <div v-show="currentTab==2">
             <v-row class="mt-2">
