@@ -7,55 +7,18 @@
         <v-select
           v-model="selectSemester"
           :items="semesterList"
-          item-text="value"
-          item-value="id"
           label="Select Semester"
-          return-object
         ></v-select>
-      </v-col>
-      <!-- select year -->
-      <v-col xl="2" lg="3" md="6" sm="12" xs="12" cols="12">
-        <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="displayedDate"
-              label="Select Year"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            >
-            </v-text-field>
-          </template>
-
-          <v-date-picker
-            v-model="date"
-            :active-picker.sync="activePicker"
-            :max="
-              new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-                .toISOString()
-                .substr(0, 10)
-            "
-            min="1950-01-01"
-            @input="save"
-            no-title
-            reactive
-          ></v-date-picker>
-        </v-menu>
       </v-col>
       <!-- select course -->
       <v-col xl="2" lg="3" md="6" sm="12" xs="12" cols="12">
         <v-select
           v-model="selectCourse"
           :items="courseList"
+          item-text="name"
+          item-value="id"
           label="Select Course"
+          return-object
         ></v-select>
       </v-col>
     </v-row>
@@ -68,7 +31,7 @@
         :loading="isUploading"
         :disabled="isUploading"
         color="blue-grey"
-        @click.once="submitFiles()"
+        @click.once="uploadFile()"
       >
         Upload
         <v-icon right dark> mdi-cloud-upload </v-icon>
@@ -81,7 +44,7 @@
         <div class="card-heading">
           <h2 class="teal--text">File Upload & Preview</h2>
           <p class="lead">
-            Note: Select files with <b> ".record" extension </b> and proper
+            Note: Select files with <b> ".report" extension </b> and proper
             formatting
           </p>
         </div>
@@ -96,7 +59,7 @@
               id="file-upload"
               type="file"
               name="fileUpload"
-              accept=".pdf"
+              accept=".report"
               multiple
               @change="handleFileUpload"
               v-show="false"
@@ -153,50 +116,97 @@
 </template>
 
 <script>
+// const axios = require("axios");
+import * as axios from "axios";
+import * as _ from "lodash";
+
 export default {
   name: "UploadExam",
+  async mounted() {
+    this.fetchSems();
+    await this.fetchCourses();
+  },
   data() {
     return {
-      selectSemester: { id: 0, value: "Winter Semester" },
-      semesterList: [
-        { id: 0, value: "Winter Semester" },
-        { id: 1, value: "Summer Semester" },
-      ],
+      selectSemester: "",
+      semesterList: [],
 
-      selectCourse: "HMI - Human Machine Interaction",
-      courseList: [
-        "HMI - Human Machine Interaction",
-        "3DCC - 3D Content Creation",
-        "CI - Computational Intelligence",
-      ],
-
-      activePicker: null,
-      date: null,
-      menu: false,
-      displayedDate: "2022",
+      selectCourse: "",
+      courseList: [],
 
       fileList: [],
       isUploading: false,
     };
   },
   methods: {
-    save(date) {
-      this.$refs.menu.save(date);
-      this.activePicker = "YEAR";
-      this.menu = false;
-      this.displayedDate = new Date(date).getFullYear();
+    async fetchSems() {
+      let start = 2000;
+      let year = new Date().getFullYear() + 1;
+      let range = _.range(start, year);
+      let semList = [];
+      range.forEach((num) => {
+        let numStr = num % 100 < 10 ? `0${num % 100}` : `${num % 100}`;
+        semList.push(`WS${numStr}`);
+        semList.push(`SS${numStr}`);
+      });
+      this.semesterList = semList?.reverse() ?? [];
+      this.selectSemester = this.semesterList[0] ?? "";
+    },
+    async fetchCourses() {
+      const response = await axios.get("http://localhost:3000/api/courses");
+      let courseList = response?.data?.Data || [];
+      if (courseList.length == 0) {
+        this.courseList = [];
+        return;
+      }
+
+      let arr = [];
+      courseList.forEach((obj) => {
+        let course = {
+          id: obj._id,
+          code: obj.code,
+          name: obj.name,
+        };
+        arr.push(course);
+      });
+
+      this.courseList = arr;
+      this.selectCourse = this.courseList[0] ?? null;
     },
     handleFileUpload(event) {
       let files = event.target.files;
+      //   console.log("files=>", files);
       this.fileList = Array.from(files); // convert theFileList to array
     },
-    submitFiles() {
+    uploadFile() {
       if (this.isUploading) return;
+      if (!this.selectSemester || !this.selectCourse?.id) return;
+
       this.isUploading = true;
-      let formData = new FormData();
-      for (var i = 0; i < this.fileList.length; i++) {
-        let file = this.fileList[i];
-        formData.append("files[" + i + "]", file);
+
+      let len = 1; // this.fileList.length
+      for (var i = 0; i < len; i++) {
+        let formData = new FormData();
+        formData.append("semester", this.selectSemester);
+        formData.append("course_id", this.selectCourse?.id);
+        formData.append("file", this.fileList[i]);
+
+        for (var key of formData.entries()) {
+          console.log(key[0] + ", " + key[1]);
+        }
+
+        axios
+          .post("http://localhost:3000/api/fileupload", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
     removeFile(index) {
@@ -205,10 +215,10 @@ export default {
     },
   },
   watch: {
-    menu(val) {
-      val && setTimeout(() => (this.activePicker = "YEAR"));
-      val && this.$nextTick(() => (this.activePicker = "YEAR"));
-    },
+    // menu(val) {
+    //   val && setTimeout(() => (this.activePicker = "YEAR"));
+    //   val && this.$nextTick(() => (this.activePicker = "YEAR"));
+    // },
   },
 };
 </script>
