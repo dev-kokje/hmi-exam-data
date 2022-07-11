@@ -117,13 +117,6 @@ export default {
         studentIdSelectedProp: Boolean,
         examResultDataProp: Object
     },
-    watch: {
-        studentIdSelectedProp(newVal, oldVal) {
-            if(newVal != oldVal) {
-                this.currentTab = 2
-            }
-        }        
-    },
     computed: {
         displayScore() {
             return this.examResultDataProp.scored_points + "/" + this.examData.maxPoints
