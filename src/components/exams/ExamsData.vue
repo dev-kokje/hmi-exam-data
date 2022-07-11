@@ -1,6 +1,14 @@
 <template>
   <div>
 
+    <v-overlay :value="overlay">
+      <v-progress-circular
+        indeterminate
+        size="128"
+        color="primary"
+      ></v-progress-circular>
+    </v-overlay>
+
     <ExamSearchBar @examData="fetchExamData" />
 
     <v-divider></v-divider>
@@ -19,11 +27,11 @@
       <v-col md="10">
         <ExamQuestionsData 
           v-if="sideBarLoaded"
-          :key="studentIdKey" 
+          :key="studentIdKey"
           :examQuestionsDataProp="examQuestionsData" 
           :examDataProp="examData"
           :examResultDataProp="examResultData"
-          :studentIdSelectedProp="studentIdSelected" 
+          :studentIdSelectedProp="studentIdSelected"
           class="full-height" />
       </v-col>
     </v-row>
@@ -63,7 +71,8 @@ export default {
     selectedExamResultId: 0,
     sideBarLoaded: false,
     studentIdSelected: false,
-    studentIdKey: 0
+    studentIdKey: 0,
+    overlay: false
   }),
   methods: {
     fetchExamData(val) {
@@ -95,6 +104,8 @@ export default {
     },
     studentSelected(val) {
 
+      this.overlay = true
+
       let examResultId = val
       this.examResultData =  this.examData.examResults.find(exam => exam._id === examResultId)
       console.log("Selected exam result id - ", examResultId)
@@ -106,6 +117,7 @@ export default {
           this.examQuestionsData = results.data.Data
           this.studentIdSelected = true
           this.studentIdKey++
+          this.overlay = false
         })
     }
   },

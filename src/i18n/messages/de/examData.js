@@ -36,5 +36,35 @@ export default {
             result: "Ergebnis"
         },
         infomessage: "Bitte wählen Sie die Einschreibungsnummer in der Seitenleiste aus, um schülerspezifische Details anzuzeigen." 
+    },
+    examDashboard : {
+        Semester : "Semester",
+        Course : "Kurs",
+        MaximumPoints : "Maximale Punktzahl",
+        PassingPoints : "Passpunkte",
+        save : "sparen",
+        edit : "bearbeiten",
+    },
+    pointerDistribution : {
+        pointerDistribution : "Zeigerverteilung",
+        Marks : "Markierungen",
+        Pointer: "Zeiger",
+        NumberofStudent: "Anzahl der Schüler",
+        andabove :  "und darüber",
+    },
+    studentDistribution : {
+        title : "Studentenverteilungbove",
+    },
+    fileUpload : {
+        "AddNewCourse" : "Neuen Kurs hinzufügen",
+        "Upload" : "Hochladen",
+        "FileUpload&Preview" : "Datei-Upload & Vorschau",
+        "NoteSelectfileswithreportextension" : "Hinweis: Wählen Sie Dateien mit Berichtserweiterung aus",
+        "Selectafileordraghere" : "Wählen Sie eine Datei aus oder ziehen Sie sie hierher",
+        "Selectafile" : "Wählen Sie eine Datei aus",
+        "Preview" : "Preview Files",
+        "AddCourse" : "Kurs hinzufügen",
+        "Close" : "Nah dran",
+
     }
 }

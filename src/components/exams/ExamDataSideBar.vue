@@ -7,15 +7,15 @@
             class="my-4"
             @change="updateExamData"
         >
-            <v-btn small value="All">
+            <v-btn small value="all">
                 {{ $t('examData.sideBar.statuses.all') }}
             </v-btn>
 
-            <v-btn small value="Pass">
+            <v-btn small value="pass">
                 {{ $t('examData.sideBar.statuses.pass') }}
             </v-btn>
 
-            <v-btn small value="Fail">
+            <v-btn small value="fail">
                 {{ $t('examData.sideBar.statuses.fail') }}
             </v-btn>
         </v-btn-toggle>
@@ -81,7 +81,7 @@ export default {
     },
     data() {
         return {
-            status: "All",
+            status: "all",
             gradeSelect: [
                 'Very Good (1 - 1.5)',
                 'Good (1.51 - 2.5)',
@@ -110,6 +110,9 @@ export default {
     methods: {
         updateExamData() {
             console.log("Filter updated ", this.status)
+            this.examData.examResults = this.examDataProp.examResults.filter(exam => {
+                exam.status === this.status.toLowerCase()
+            })
         },
 
         selectStudent() {

@@ -10,17 +10,17 @@
             >
             {{ $t('examData.resultDetails.infomessage') }}
         </v-alert>
-
+        
     <v-row class="pb-4">
       <v-col md="12">
         <v-simple-table fixed-header class="exam-table">
           <template v-slot:default>
             <thead>
               <tr>
-                <th class="text-left border-right">Semester</th>
-                <th class="text-left border-right">Course</th>
-                <th class="text-left border-right">Maximum Points</th>
-                <th class="text-left border-right">Passing Points</th>
+                <th class="text-left border-right">{{$t('examData.examDashboard.Semester')}}</th>
+                <th class="text-left border-right">{{$t('examData.examDashboard.Course')}}</th>
+                <th class="text-left border-right">{{$t('examData.examDashboard.MaximumPoints')}}</th>
+                <th class="text-left border-right">{{$t('examData.examDashboard.PassingPoints')}}</th>
                 <th class="text-left"></th>
               </tr>
             </thead>
@@ -53,7 +53,7 @@
                         examDataProp.passingPoints < 0)
                     "
                   >
-                    {{ toggleFlag ? "save" : "edit" }}
+                    {{ toggleFlag ? $t('examData.examDashboard.save') : $t('examData.examDashboard.edit') }}
                   </v-btn>
                 </td>
               </tr>
@@ -66,14 +66,12 @@
     <v-divider></v-divider>
 
     <v-row class="mt-4 p-0">
-      <!-- xl="4" lg="4" md="6" sm="12" xs="12" cols="12" -->
       <v-col cols="6" class="p-0">
         <PointerDistribution
           :baseMark="baseMark"
           :examDataProp="examDataProp"
         />
       </v-col>
-      <!-- xl="4" lg="4" md="6" sm="12" xs="12" cols="12" -->
       <v-col cols="6" class="p-0">
         <StudentDistribution
           :baseMark="baseMark"
@@ -85,7 +83,7 @@
 </template>
 
 <script>
-import * as axios from "axios";
+import axios from "axios";
 import PointerDistribution from "./components/PointerDistribution.vue";
 import StudentDistribution from "./components/StudentDistribution.vue";
 export default {
@@ -116,12 +114,10 @@ export default {
       this.baseMark = Number(this.examDataProp.passingPoints) ?? 0;
       // update marks api call
       let course_id = this.examDataProp.course._id;
-      let payload = {};
       axios
         .patch(
-            // api path to be updated
-          `http://localhost:3000/api/student/exam-point-update/${course_id}/${this.baseMark}`,
-          payload
+          // api path to be updated
+          `https://sleepy-meadow-31578.herokuapp.com/api/exam-marks-update/${course_id}/${this.baseMark}`
         )
         .then((response) => {
           console.log("on marks update=>", response);
