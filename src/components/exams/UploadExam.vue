@@ -1,3 +1,4 @@
+<!-- eslint-disable no-unreachable -->
 <template>
   <v-container class="fill-height" fluid>
     <!-- select fields -->
@@ -7,33 +8,41 @@
         <v-select
           v-model="selectSemester"
           :items="semesterList"
-          label="Select Semester"
-        ></v-select>
+          item-text="name"
+          item-value="_id"
+          :label="$t('examData.topBar.semester')"
+          @change="fetchCoursesForSemester"
+        >
+        </v-select>
       </v-col>
       <!-- select course -->
       <v-col xl="2" lg="3" md="6" sm="12" xs="12" cols="12">
         <v-select
           v-model="selectCourse"
           :items="courseList"
-          item-text="name"
-          item-value="id"
-          label="Select Course"
-          return-object
+          item-text="displayName"
+          item-value="_id"
+          :label="$t('examData.topBar.course')"
         ></v-select>
+      </v-col>
+      <!-- add new course -->
+      <v-col xl="2" lg="3" md="6" sm="12" xs="12" cols="12">
+        <v-btn color="success" dark @click="showAddCourse = !showAddCourse">
+          {{$t('examData.fileUpload.AddNewCourse')}}
+        </v-btn>
       </v-col>
     </v-row>
 
     <!-- File Upload Button -->
     <v-row align="center" justify="end">
-      <!-- :disabled="isUploading || fileList.length == 0" -->
       <v-btn
         class="mr-2 white--text"
         :loading="isUploading"
-        :disabled="isUploading"
+        :disabled="isUploading || fileList.length == 0"
         color="blue-grey"
-        @click.once="uploadFile()"
+        @click="uploadFile()"
       >
-        Upload
+        {{$t('examData.fileUpload.Upload')}}
         <v-icon right dark> mdi-cloud-upload </v-icon>
       </v-btn>
     </v-row>
@@ -42,10 +51,9 @@
     <v-row align="center" justify="center" v-if="fileList.length == 0">
       <v-col cols="12" sm="10" md="10">
         <div class="card-heading">
-          <h2 class="teal--text">File Upload & Preview</h2>
+          <h2 class="teal--text">{{$t('examData.fileUpload.FileUpload&Preview')}}</h2>
           <p class="lead">
-            Note: Select files with <b> ".report" extension </b> and proper
-            formatting
+            {{$t('examData.fileUpload.NoteSelectfileswithreportextension')}}
           </p>
         </div>
         <v-card
@@ -71,9 +79,9 @@
                 aria-hidden="true"
               ></i>
 
-              <div class="mt-5 mb-2">Select a file or drag here</div>
+              <div class="mt-5 mb-2">{{$t('examData.fileUpload.Selectafileordraghere')}}</div>
 
-              <v-btn depressed color="primary"> Select a file </v-btn>
+              <v-btn depressed color="primary"> {{$t('examData.fileUpload.Selectafile')}} </v-btn>
             </label>
           </v-card-text>
         </v-card>
@@ -83,7 +91,7 @@
     <!-- upload files listing -->
     <v-row v-if="fileList.length > 0">
       <v-col>
-        <v-subheader>Preview Files</v-subheader>
+        <v-subheader>{{$t('examData.fileUpload.Preview')}}</v-subheader>
         <v-list subheader two-line>
           <v-list-item
             v-for="(item, index) in fileList"
@@ -94,9 +102,7 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title
-                v-text="item.name + '-' + index"
-              ></v-list-item-title>
+              <v-list-item-title v-text="item.name"></v-list-item-title>
 
               <v-list-item-subtitle
                 v-text="item.size / 1000000 + ' MB'"
@@ -112,19 +118,88 @@
         </v-list>
       </v-col>
     </v-row>
+
+    <!-- snackbar -->
+    <v-snackbar v-model="snackbar" :timeout="timeout">
+      {{ text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
+    <!-- add course form -->
+    <v-row justify="center">
+      <v-dialog v-model="showAddCourse" persistent max-width="600px">
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">{{$t('examData.fileUpload.AddCourse')}}</span>
+          </v-card-title>
+
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <!-- sem -->
+                <v-col cols="12">
+                  <v-select
+                    v-model="course_sem_id"
+                    :items="semesterList"
+                    item-text="name"
+                    item-value="_id"
+                    :label="$t('examData.topBar.semester')"
+                  >
+                  </v-select>
+                </v-col>
+                <!-- course code -->
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="course_code"
+                    label="Enter Course Code"
+                  ></v-text-field>
+                </v-col>
+                <!-- course name -->
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="course_name"
+                    label="Enter Course Name"
+                  ></v-text-field>
+                </v-col>
+                <!-- passing points -->
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="passing_points"
+                    type="number"
+                    label="Enter Passing Points"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="addNewCourse(false)">
+              {{$t('examData.fileUpload.Close')}}
+            </v-btn>
+            <v-btn color="blue darken-1" text @click="addNewCourse(true)">
+              {{$t('examData.fileUpload.AddCourse')}}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-// const axios = require("axios");
-import * as axios from "axios";
+import axios from "axios";
 import * as _ from "lodash";
 
 export default {
   name: "UploadExam",
   async mounted() {
-    this.fetchSems();
-    await this.fetchCourses();
+    this.fetchSemList();
   },
   data() {
     return {
@@ -136,6 +211,19 @@ export default {
 
       fileList: [],
       isUploading: false,
+
+      //   uploadFlagArr: [],
+
+      snackbar: false,
+      text: "",
+      timeout: 2000,
+
+      showAddCourse: false,
+      course_sem_id: "",
+      course_code: "",
+      course_name: "",
+      maximum_points: 100,
+      passing_points: 50,
     };
   },
   methods: {
@@ -146,14 +234,14 @@ export default {
       let semList = [];
       range.forEach((num) => {
         let numStr = num % 100 < 10 ? `0${num % 100}` : `${num % 100}`;
-        semList.push(`WS${numStr}`);
         semList.push(`SS${numStr}`);
+        semList.push(`WS${numStr}`);
       });
       this.semesterList = semList?.reverse() ?? [];
       this.selectSemester = this.semesterList[0] ?? "";
     },
     async fetchCourses() {
-      const response = await axios.get("http://localhost:3000/api/courses");
+      const response = await axios.get("https://sleepy-meadow-31578.herokuapp.com/api/courses");
       let courseList = response?.data?.Data || [];
       if (courseList.length == 0) {
         this.courseList = [];
@@ -175,43 +263,134 @@ export default {
     },
     handleFileUpload(event) {
       let files = event.target.files;
-      //   console.log("files=>", files);
       this.fileList = Array.from(files); // convert theFileList to array
+      //   this.uploadFlagArr = new Array(this.fileList.length).fill(false);
     },
     uploadFile() {
-      if (this.isUploading) return;
-      if (!this.selectSemester || !this.selectCourse?.id) return;
+      if (this.isUploading) {
+        this.snackbar = true;
+        this.text = "Please wait..";
+        return;
+      }
+      if (!this.selectSemester || !this.selectCourse) {
+        this.snackbar = true;
+        this.text = "Please select Semester and Course..";
+        return;
+      }
 
       this.isUploading = true;
 
-      let len = 1; // this.fileList.length
+      let len = this.fileList.length;
+      let promiseArr = [];
       for (var i = 0; i < len; i++) {
+        // add to upload only if flag is false
+        // if (!this.uploadFlagArr[i] || this.uploadFlagArr[i] == false) {}
         let formData = new FormData();
-        formData.append("semester", this.selectSemester);
-        formData.append("course_id", this.selectCourse?.id);
-        formData.append("file", this.fileList[i]);
-
-        for (var key of formData.entries()) {
-          console.log(key[0] + ", " + key[1]);
-        }
-
-        axios
-          .post("http://localhost:3000/api/fileupload", formData, {
+        formData.append("files", this.fileList[i]);
+        let promise = axios.post(
+          `https://sleepy-meadow-31578.herokuapp.com/api/fileupload/${this.selectCourse}`,
+          formData,
+          {
             headers: {
               "Content-Type": "multipart/form-data",
             },
-          })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+          }
+        );
+        promiseArr.push(promise);
       }
+
+      Promise.all(promiseArr)
+        .then((responseArr) => {
+          console.log("responseArr=>", responseArr);
+          this.snackbar = true;
+          this.text = "All files uploaded successfully!";
+          //   responseArr.forEach((response, index) => {
+          //     if (response.status == 200) {
+          //       this.uploadFlagArr[index] = true;
+          //     } else {
+          //       this.uploadFlagArr[index] = false;
+          //     }
+          //   });
+          // remove all files
+          setTimeout(() => {
+            this.clearAll();
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          this.snackbar = true;
+          this.text = "Internal Error. Please try later..";
+        })
+        .finally(() => {
+          this.isUploading = false;
+        });
     },
     removeFile(index) {
       this.fileList.splice(index, 1);
+      //   this.uploadFlagArr = new Array(this.fileList.length).fill(false);
       this.$forceUpdate();
+    },
+    clearAll() {
+      this.fileList = [];
+      //   this.uploadFlagArr = new Array(this.fileList.length).fill(false);
+      this.$forceUpdate();
+    },
+
+    // new fetch sem and course methods
+    fetchSemList() {
+      const baseUrl = "https://sleepy-meadow-31578.herokuapp.com/api/sem";
+      this.$http.get(baseUrl).then((results) => {
+        this.semesterList = results.data.Data;
+      });
+    },
+    fetchCoursesForSemester() {
+      let semesterId = this.selectSemester;
+      const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/sem-subjects/${semesterId}`;
+      this.$http.get(baseUrl).then((results) => {
+        this.courseList = results.data.Data;
+        this.courseList.map((course) => {
+          course.displayName = course.code + " - " + course.name;
+        });
+      });
+    },
+
+    addNewCourse(flag) {
+      if (!flag) {
+        this.closeDialog();
+        return;
+      }
+
+      // add new course API
+      let semID = this.course_sem_id;
+      let payload = {
+        code: this.course_code,
+        name: this.course_name,
+        maximum_points: "100",
+        passing_points: this.passing_points,
+      };
+
+      axios
+        .post(`https://sleepy-meadow-31578.herokuapp.com/api/add-course/${semID}`, payload)
+        .then((response) => {
+          console.log("response=>", response);
+          if (response.status == 200) {
+            this.snackbar = true;
+            this.text = "New Course added successfully";
+          }
+          this.closeDialog();
+        })
+        .catch((error) => {
+          console.log("error=>", error);
+          this.snackbar = true;
+          this.text = "Internal Server Error..";
+          this.closeDialog();
+        });
+    },
+    closeDialog() {
+      this.course_code = "";
+      this.course_name = "";
+      this.passing_points = 50;
+      this.showAddCourse = false;
     },
   },
   watch: {

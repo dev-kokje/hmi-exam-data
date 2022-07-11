@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard">
-    <v-subheader class="grey--text darken-5">Student Distribution</v-subheader>
+    <v-subheader class="grey--text darken-5">{{$t('examData.studentDistribution.title')}}</v-subheader>
     <v-container fluid>
       <Doughnut :chartData="chartData" :height="300" :width="300" />
     </v-container>
@@ -105,16 +105,17 @@ export default {
       let labelArr = [];
       let dataArr = [];
       let backgroundColorArr = [
-        "#0b7baa",
-        "#80dcf8",
-        "#b489a0",
-        "#c9dd9e",
-        "#15ccb5",
-        "#13f1c6",
-        "#930fb1",
-        "#b28217",
-        "#158c76",
-        "#b7b461",
+        "#00FF00",
+        "#33ff00",
+        "#66ff00",
+        "#99ff00",
+        "#ccff00",
+        "#FFFF00",
+        "#FFCC00",
+        "#ff9900",
+        "#ff6600",
+        "#FF3300",
+        "#FF0000",
       ];
       this.pointerDistribution.forEach((obj) => {
         labelArr.push(`${obj.lowerBracket} - ${obj.upperBracket}`);
