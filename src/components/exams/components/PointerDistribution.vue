@@ -1,16 +1,24 @@
 <template>
   <div class="dashboard">
-    <v-subheader class="grey--text darken-5">Pointer Distribution</v-subheader>
+    <v-subheader class="grey--text darken-5">{{
+      $t("examData.pointerDistribution.pointerDistribution")
+    }}</v-subheader>
 
     <v-container fluid>
       <v-simple-table dense fixed-header height="400px">
         <template v-slot:default>
           <thead>
             <tr>
-              <th class="text-center">Marks</th>
-              <th class="text-center">Pointer</th>
-              <th class="text-center">Number of Student</th>
-              <th class="text-center">Grade Range</th>
+              <th class="text-center">
+                {{ $t("examData.pointerDistribution.Marks") }}
+              </th>
+              <th class="text-center">
+                {{ $t("examData.pointerDistribution.Pointer") }}
+              </th>
+              <th class="text-center">
+                {{ $t("examData.pointerDistribution.NumberofStudent") }}
+              </th>
+              <!-- <th class="text-center">Grade Range</th> -->
             </tr>
           </thead>
           <tbody>
@@ -19,12 +27,15 @@
               :key="item.marks"
               :class="getBG(item.gradeRange)"
             >
-              <td class="text-center">{{ item.marks }} and above</td>
+              <td class="text-center">
+                {{ item.marks }}
+                {{ $t("examData.pointerDistribution.andabove") }}
+              </td>
               <td class="text-center">
                 {{ item.lowerBracket }} - {{ item.upperBracket }}
               </td>
               <td class="text-center">{{ item.studentCount }}</td>
-              <td class="text-center">{{ item.gradeRange }}</td>
+              <!-- <td class="text-center">{{ item.gradeRange }}</td> -->
             </tr>
           </tbody>
         </template>
@@ -113,7 +124,6 @@ export default {
           Number(obj.upperBracket)
         );
       });
-    
     },
     getBG(range) {
       if (range == "very good") return "green accent-2";

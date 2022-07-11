@@ -36,5 +36,34 @@ export default {
             result: "Result"
         },
         infomessage: "Please select enrollment number from sidebar to view student specific details."
+    },
+    examDashboard : {
+        Semester : "Semester",
+        Course : "Course",
+        MaximumPoints : "Maximum Points",
+        PassingPoints : "Passing Points",
+        save : "save",
+        edit : "edit",
+    },
+    pointerDistribution : {
+        pointerDistribution : "Pointer Distribution",
+        Marks : "Marks",
+        Pointer: "Pointer",
+        NumberofStudent: "Number of Student",
+        andabove : "and above",
+    },
+    studentDistribution : {
+        title : "Student Distribution",
+    },
+    fileUpload : {
+        "AddNewCourse" : "Add New Course",
+        "Upload" : "Upload",
+        "FileUpload&Preview" : "File Upload & Preview",
+        "NoteSelectfileswithreportextension" : "Note: Select files with report extension",
+        "Selectafileordraghere" : "Select a file or drag here",
+        "Selectafile" : "Select a file",
+        "Preview" : "Preview Files",
+        "AddCourse" : "Add Course",
+        "Close" : "Close",
     }
 }
