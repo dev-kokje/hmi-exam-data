@@ -45,7 +45,7 @@
 
                 <v-col md="4" class="pb-0">
                     <p> {{ $t('examData.resultDetails.enrollment_number') }}:
-                        <span class="font-weight-bold"> {{ examResultDataProp.student_id }} </span>
+                        <span class="font-weight-bold"> {{ examResultDataProp.student[0].enrollment_number }} </span>
                     </p>
                 </v-col>
             </v-row>
@@ -131,9 +131,6 @@ export default {
             return result
         }
     },
-    updated() {
-        console.log(this.examData)
-    },
     data() {
 
         return {
@@ -148,7 +145,6 @@ export default {
     methods: {
         toggleTab(val) {
             this.currentTab = val
-            console.log("Student questions data - ", this.examQuestionsData)
         }
     }
 }

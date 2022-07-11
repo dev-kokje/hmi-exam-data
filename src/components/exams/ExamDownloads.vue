@@ -116,10 +116,6 @@
             }
         },
         methods: {
-            showData() {
-                console.log("Downloads Data - ", JSON.stringify(this.examDataProp))
-                console.log("Downloads Exam Result Data - ", this.students)
-            },
             downloadAllFiles() {
 
                 let fileData = []
@@ -137,7 +133,6 @@
 
                         const examResultId = examResult._id
                         const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/students/exam/${examResultId}`;
-                        console.log("Downloads Request made to ", baseUrl)
                         this.$http
                             .get(baseUrl)
                             .then((results) => {

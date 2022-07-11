@@ -44,7 +44,6 @@ export default {
     }),
     methods: {
         searchCourseData() {
-            console.log("Selected semester and course - ", this.semester, this.course)
             this.$emit("examData", {
                 semester: this.semestersList.find(sem => sem._id === this.semester),
                 course: this.coursesList.find(cor => cor._id === this.course)

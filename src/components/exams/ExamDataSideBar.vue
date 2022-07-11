@@ -65,7 +65,7 @@
                 >
                     <v-list-item-content>
                         <v-list-item-title 
-                            v-text="examResult.student_id"></v-list-item-title>
+                            v-text="examResult.student[0].enrollment_number"></v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
@@ -94,6 +94,9 @@ export default {
             examData: {...this.examDataProp}
         }
     },
+    mounted() {
+        console.log("Stydent data - ", this.examData)
+    },
     computed: {
         grades() {
             return (
@@ -113,6 +116,7 @@ export default {
             this.examData.examResults = this.examDataProp.examResults.filter(exam => {
                 exam.status === this.status.toLowerCase()
             })
+            
         },
 
         selectStudent() {

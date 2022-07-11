@@ -8,7 +8,9 @@ export default {
             this.examData.examResults.map(examResult => {
                 let scoredPoints = examResult.scored_points
                 examResult.pointer = ((maxPoints - scoredPoints) * 3 / (maxPoints - passingPoints)) + 1
-        
+                
+                examResult.pointer = Math.round(examResult.pointer * 10) / 10
+
                 if(examResult.pointer >= 1 && examResult.pointer <= 1.5) {
                     examResult.grade = "vg"
                     examResult.status = "pass"
@@ -22,6 +24,7 @@ export default {
                     examResult.grade = "su"
                     examResult.status = "pass"
                 } else {
+                    examResult.pointer = 5.0
                     examResult.grade = "in"
                     examResult.status = "fail"
                 }

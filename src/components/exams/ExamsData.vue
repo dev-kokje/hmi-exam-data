@@ -72,15 +72,13 @@ export default {
     sideBarLoaded: false,
     studentIdSelected: false,
     studentIdKey: 0,
-    overlay: false
+    overlay: false,
+    sideBarReload: 0
   }),
   methods: {
     fetchExamData(val) {
       this.semester = val.semester
       this.course = val.course
-
-      console.log("Semester - ", val.semester)
-      console.log("Course - ", val.course)
 
       this.examData = {
         semester: val.semester,
@@ -95,6 +93,7 @@ export default {
         this.$http
           .get(baseUrl)
           .then((results) => {
+            console.log("Results output - ", results)
             this.examData.examResults = results.data.Data
             this.gradeCalculation()
             this.sideBarReload++
@@ -106,15 +105,21 @@ export default {
 
       this.overlay = true
 
+      console.log("Exam result id - ", val)
+
       let examResultId = val
       this.examResultData =  this.examData.examResults.find(exam => exam._id === examResultId)
-      console.log("Selected exam result id - ", examResultId)
+      console.log("Exam data examDataResultProp", this.examResultData)
       const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/students/exam/${examResultId}`;
-      console.log("Request made to ", baseUrl)
       this.$http
         .get(baseUrl)
         .then((results) => {
           this.examQuestionsData = results.data.Data
+          this.examData.examResults.map(examResult => {
+            if(examResult._id === examResultId) {
+              examResult.scored_points = Math.round(examResult.scored_points * 100) / 100
+            }
+          })
           this.studentIdSelected = true
           this.studentIdKey++
           this.overlay = false
