@@ -101,8 +101,9 @@
             <v-row>
                 <v-col md="12" class="questions-sheet">
                     <QuestionCard 
-                        v-for="qus in examQuestionsData" 
-                        :key="qus._id" 
+                        v-for="(qus, index) in examQuestionsData" 
+                        :key="qus._id"
+                        :questionNo="index+1"
                         :questionDataProp="qus"
                         @updateQuestionPoints="updateQuestionPoints"></QuestionCard>
                 </v-col>

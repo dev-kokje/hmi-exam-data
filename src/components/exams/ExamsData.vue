@@ -152,6 +152,9 @@ export default {
             totalScore = Math.round(totalScore * 10) / 10
           }
           this.examResultData.scored_points = totalScore
+
+          this.updateExamResultsPoints(totalScore)
+
           this.examData.examResults.map(examResult => {
             if(examResult._id === this.examResultData._id) {
               examResult = this.examResultData
@@ -164,6 +167,19 @@ export default {
           console.log("re-render component")
 
         })
+    },
+    updateExamResultsPoints(totalScore) {
+
+      const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/student/exam-point-update/${this.examResultData._id}/${totalScore}`;
+
+      console.log("Sending axios request - ", baseUrl)
+
+      this.$http
+        .patch(baseUrl)
+        .then((result) => {
+          console.log(result)
+        })
+
     }
   },
   mixins: [examDataMixin]
