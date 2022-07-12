@@ -132,7 +132,7 @@ export default {
 
             let zip = new JsZip()
 
-            let examResultsData = this.examDataProp.examResults.filter()
+            let examResultsData = this.examDataProp.examResults
             examResultsData.forEach((examResult) => {
 
             let fileContent = []
