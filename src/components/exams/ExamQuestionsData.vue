@@ -1,22 +1,26 @@
 <template>
     <div>
 
-        <v-tabs 
+        <v-tabs
+            v-model="currentTab" 
             background-color="#fafafa"
             light>
             <v-tab 
                 class="tab-text"
-                @click="toggleTab(1)">
+                @click="toggleTab(0)"
+                key="0">
                 Exam Dashboard
             </v-tab>
             <v-tab 
                 class="tab-text"
-                @click="toggleTab(2)">
+                @click="toggleTab(1)"
+                key="1">
                 Downloads
             </v-tab>
-            <v-tab 
+            <v-tab
                 class="tab-text"
-                @click="toggleTab(3)"
+                @click="toggleTab(2)"
+                key="2"
                 :disabled="!studentIdSelectedProp">
                 Student Specific Details
                 <!-- <span v-show="studentIdSelectedProp"> {{ examResultDataProp.student_id }} </span> -->
@@ -25,11 +29,11 @@
 
         <v-divider></v-divider>
 
-        <ExamDashboard class="mt-2" v-show="currentTab==1" :examDataProp="examDataProp" />
+        <ExamDashboard class="mt-2" v-show="currentTab==0" :examDataProp="examDataProp" />
 
-        <ExamDownloads :examDataProp="examData" v-show="currentTab==2" />
+        <ExamDownloads :examDataProp="examData" v-show="currentTab==1" />
 
-        <div v-show="currentTab==3">
+        <div v-show="currentTab==2">
             <v-row class="mt-2">
                 <v-col md="2" class="pb-0 ml-1">
                     <p> {{ $t('examData.resultDetails.semester') }}:
@@ -45,7 +49,9 @@
 
                 <v-col md="4" class="pb-0">
                     <p> {{ $t('examData.resultDetails.enrollment_number') }}:
-                        <span class="font-weight-bold"> {{ examResultDataProp.student[0].enrollment_number }} </span>
+                        <span class="font-weight-bold"> 
+                            {{  Object.keys(examResultDataProp).length === 0 ? 0: examResultDataProp.student[0].enrollment_number }} 
+                        </span>
                     </p>
                 </v-col>
             </v-row>
@@ -85,7 +91,7 @@
             <v-divider></v-divider>
         </div>
 
-        <div v-show="currentTab==3">
+        <div v-show="currentTab==2">
             <v-row>
                 <v-col md="12">
                     <p class="mt-2 mb-0">Questions</p>
@@ -94,7 +100,11 @@
 
             <v-row>
                 <v-col md="12" class="questions-sheet">
-                    <QuestionCard v-for="qus in examQuestionsData" :key="qus._id" :questionDataProp="qus"></QuestionCard>
+                    <QuestionCard 
+                        v-for="qus in examQuestionsData" 
+                        :key="qus._id" 
+                        :questionDataProp="qus"
+                        @updateQuestionPoints="updateQuestionPoints"></QuestionCard>
                 </v-col>
             </v-row>
         </div>
@@ -115,7 +125,8 @@ export default {
         examDataProp: Object,
         examQuestionsDataProp: Array,
         studentIdSelectedProp: Boolean,
-        examResultDataProp: Object
+        examResultDataProp: Object,
+        currentTabProp: Number
     },
     computed: {
         displayScore() {
@@ -136,7 +147,7 @@ export default {
         return {
             examData: {...this.examDataProp},
             examQuestionsData: {...this.examQuestionsDataProp},
-            currentTab: 1,
+            currentTab: this.currentTabProp,
             showContentTop: false,
             showContentQuestions: false,
             enrollmentNumber: ""
@@ -145,6 +156,9 @@ export default {
     methods: {
         toggleTab(val) {
             this.currentTab = val
+        },
+        updateQuestionPoints(val) {
+            this.$emit("updateQuestionPoints", val)
         }
     }
 }

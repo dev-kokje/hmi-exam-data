@@ -23,7 +23,7 @@
                         class="my-1 pa-0 edit-point"
                         :suffix="'/'.concat(qus.maximum_points)"
                         v-if="editPoints"
-                        @focusout="changePoints"
+                        @focusout="changePoints(1)"
                     ></v-text-field>
                     <v-chip
                         outlined
@@ -31,7 +31,7 @@
                         color=""
                         label
                         v-else
-                        @click="changePoints"
+                        @click="changePoints(-1)"
                         >
                             {{ qus.scored_points }}/{{ qus.maximum_points }}
                     </v-chip>
@@ -92,8 +92,15 @@ export default {
         }
     },
     methods: {
-        changePoints() {
+        changePoints(val) {
             this.editPoints = !this.editPoints
+            if(val == 1) {
+                console.log("Updated points to ", this.points ," for question id - ", this.questionData._id)
+                this.$emit("updateQuestionPoints", {
+                    questionId: this.questionData._id,
+                    points: this.points
+                })
+            }
         }
     }
 }
