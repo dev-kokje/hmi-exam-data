@@ -29,9 +29,9 @@
 
         <v-divider></v-divider>
 
-        <ExamDashboard class="mt-2" v-show="currentTab==0" :examDataProp="examDataProp" />
+        <ExamDashboard :key="studentIdKey" class="mt-2" v-show="currentTab==0" :examDataProp="examDataProp" />
 
-        <ExamDownloads :examDataProp="examData" v-show="currentTab==1" />
+        <ExamDownloads :key="studentIdKey" :examDataProp="examData" v-show="currentTab==1" />
 
         <div v-show="currentTab==2">
             <v-row class="mt-2">
@@ -127,7 +127,8 @@ export default {
         examQuestionsDataProp: Array,
         studentIdSelectedProp: Boolean,
         examResultDataProp: Object,
-        currentTabProp: Number
+        currentTabProp: Number,
+        studentIdKey: Number
     },
     computed: {
         displayScore() {

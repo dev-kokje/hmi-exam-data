@@ -28,6 +28,7 @@
         <ExamQuestionsData 
           v-if="sideBarLoaded"
           :key="studentIdKey"
+          :studentIdKey="sideBarReload"
           :examQuestionsDataProp="examQuestionsData" 
           :examDataProp="examData"
           :examResultDataProp="examResultData"
@@ -100,6 +101,7 @@ export default {
             this.examData.examResults = results.data.Data
             this.gradeCalculation()
             this.sideBarReload++
+            this.studentIdKey++
             this.sideBarLoaded = true
           })
       }
