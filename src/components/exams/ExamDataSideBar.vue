@@ -23,15 +23,17 @@
         <h4 class="mt-2">Grade</h4>
 
         <v-layout column wrap class="mb-5">
-            <v-flex v-for="grade in grades" v-bind:key="grade">
+            <v-flex v-for="grade in grades" :key="grade.value">
 
                 <v-checkbox
                     v-model="gradeSelect"
-                    :label="grade"
+                    :label="grade.text"
+                    :disabled="grade.disabled"
                     color="info"
-                    :value="grade"
+                    :value="grade.value"
                     hide-details
                     dense
+                    @change="updateExamDataOnGrade"
                     ></v-checkbox>
             </v-flex>
         </v-layout>
@@ -44,7 +46,7 @@
             clearable
             outlined
             @keyup="updateExamData"
-            @click:clear="updateExamData()"
+            @click:clear="clearFilterStudent"
         ></v-text-field>
 
         <v-card
@@ -59,7 +61,7 @@
                 @change="selectStudent"
             >
                 <v-list-item
-                    v-for="(examResult, i) in examData.examResults"
+                    v-for="(examResult, i) in filteredExamData.examResults"
                     :key="i"
                     :value="examResult._id"
                 >
@@ -83,15 +85,16 @@ export default {
         return {
             status: "all",
             gradeSelect: [
-                'Very Good (1 - 1.5)',
-                'Good (1.51 - 2.5)',
-                'Satisfactory (2.51 - 3.5)',
-                'Sufficient (3.51 - 4)',
-                'Insufficient (4.01 - 5)'
+                "vg",
+                "gd",
+                "sa",
+                "su",
+                "in"
             ],
             selectedItem: 1,
             filterStudent: "",
-            examData: {...this.examDataProp}
+            examData: {...this.examDataProp},
+            filteredExamData: {...this.examDataProp}
         }
     },
     mounted() {
@@ -101,22 +104,65 @@ export default {
         grades() {
             return (
                 [
-                    this.$t('examData.sideBar.grades.vg'),
-                    this.$t('examData.sideBar.grades.gd'),
-                    this.$t('examData.sideBar.grades.sa'),
-                    this.$t('examData.sideBar.grades.su'),
-                    this.$t('examData.sideBar.grades.in')
+                    {
+                        text: this.$t('examData.sideBar.grades.vg'),
+                        value: "vg",
+                        disabled: this.status === "fail"
+                    },
+                    {
+                        text: this.$t('examData.sideBar.grades.gd'),
+                        value: "gd",
+                        disabled: this.status === "fail"
+                    }, 
+                    {
+                        text: this.$t('examData.sideBar.grades.sa'),
+                        value: "sa",
+                        disabled: this.status === "fail" 
+                    }, 
+                    {
+                        text: this.$t('examData.sideBar.grades.su'),
+                        value: "su",
+                        disabled: this.status === "fail" 
+                    }, 
+                    {
+                        text: this.$t('examData.sideBar.grades.in'),
+                        value: "in",
+                        disabled: this.status === "pass" 
+                    }
                 ]
             )
         }
     },
     methods: {
+        clearFilterStudent() {
+            this.filterStudent = ""
+            this.updateExamData()
+        },
+        updateExamDataOnGrade() {
+                let examResults = this.examData.examResults
+                examResults = examResults.filter(result => this.gradeSelect.includes(result.grade))
+                this.filteredExamData.examResults = examResults
+        },
         updateExamData() {
-            console.log("Filter updated ", this.status)
-            this.examData.examResults = this.examDataProp.examResults.filter(exam => {
-                exam.status === this.status.toLowerCase()
-            })
-            
+            if(this.status == "all") {
+                this.gradeSelect = ["vg", "gd", "sa", "su", "in"]
+                this.filteredExamData = {...this.examData}
+            } else {
+                let examResults = this.examData.examResults
+                examResults = examResults.filter(result => result.status === this.status)
+                this.filteredExamData.examResults = examResults
+                if(this.status === "pass") {
+                    this.gradeSelect = ["vg", "gd", "sa", "su"]
+                } else {
+                    this.gradeSelect = ["in"]
+                }
+            }
+
+            if(this.filterStudent != "") {
+                let examResults = this.examData.examResults
+                examResults = examResults.filter(result => result.student[0].enrollment_number.toString().includes(this.filterStudent))
+                this.filteredExamData.examResults = examResults
+            }
         },
 
         selectStudent() {
