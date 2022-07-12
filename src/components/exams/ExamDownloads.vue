@@ -7,7 +7,7 @@
                     outlined
                     >
                     <v-card-text>
-                        <h2>Download all files for the exam</h2>
+                        <h2>{{ $t('examData.examDownloads.downloadAll') }}</h2>
                         <v-radio-group>
                             <v-radio
                                 v-for="type in fileTypes"
@@ -27,7 +27,7 @@
                             width="100%"
                             large
                             >
-                            Download
+                            {{ $t('examData.examDownloads.download') }}
                             <v-icon
                                 right
                                 dark
@@ -48,7 +48,7 @@
                     outlined
                     >
                     <v-card-text>
-                        <h2>Download file for a specific students</h2>
+                        <h2>{{ $t('examData.examDownloads.downloadSelected') }}</h2>
 
                         <v-autocomplete
                             v-model="selectedStudents"
@@ -60,7 +60,7 @@
                             small-chips
                             outlined
                             dense
-                            hint="Select students from the list"
+                            :hint="$t('examData.examDownloads.studentSelectionHint')"
                             persistent-hint
                             ></v-autocomplete>
 

@@ -38,12 +38,21 @@ export default {
         infomessage: "Please select enrollment number from sidebar to view student specific details."
     },
     examDashboard : {
+        examDashboard: "Exam Dashboard",
+        downloads: "Downloads",
+        studentDetails: "Student Specific Details",
         Semester : "Semester",
         Course : "Course",
         MaximumPoints : "Maximum Points",
         PassingPoints : "Passing Points",
         save : "save",
         edit : "edit",
+    },
+    examDownloads: {
+        downloadAll: "Download all files for the exam",
+        downloadSelected: "Download file for a specific students",
+        studentSelectionHint: "Select students from the list",
+        download: "Download"
     },
     pointerDistribution : {
         pointerDistribution : "Pointer Distribution",

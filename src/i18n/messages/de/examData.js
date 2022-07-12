@@ -38,12 +38,21 @@ export default {
         infomessage: "Bitte wählen Sie die Einschreibungsnummer in der Seitenleiste aus, um schülerspezifische Details anzuzeigen." 
     },
     examDashboard : {
+        examDashboard: "Prüfungs-Dashboard",
+        downloads: "Herunterladen",
+        studentDetails: "Studentenspezifische Details",
         Semester : "Semester",
         Course : "Kurs",
         MaximumPoints : "Maximale Punktzahl",
         PassingPoints : "Passpunkte",
         save : "sparen",
         edit : "bearbeiten",
+    },
+    examDownloads: {
+        downloadAll: "Alle Dateien für die Prüfung herunterladen",
+        downloadSelected: "Datei für einen bestimmten Studenten herunterladen",
+        studentSelectionHint: "Studenten aus der Liste auswählen",
+        download: "Herunterladen"
     },
     pointerDistribution : {
         pointerDistribution : "Zeigerverteilung",

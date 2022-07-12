@@ -9,20 +9,20 @@
                 class="tab-text"
                 @click="toggleTab(0)"
                 key="0">
-                Exam Dashboard
+                {{ $t('examData.examDashboard.examDashboard') }}
             </v-tab>
             <v-tab 
                 class="tab-text"
                 @click="toggleTab(1)"
                 key="1">
-                Downloads
+                {{ $t('examData.examDashboard.downloads') }}
             </v-tab>
             <v-tab
                 class="tab-text"
                 @click="toggleTab(2)"
                 key="2"
                 :disabled="!studentIdSelectedProp">
-                Student Specific Details
+                {{ $t('examData.examDashboard.studentDetails') }}
                 <!-- <span v-show="studentIdSelectedProp"> {{ examResultDataProp.student_id }} </span> -->
             </v-tab>
         </v-tabs>
@@ -103,7 +103,7 @@
                     <QuestionCard 
                         v-for="(qus, index) in examQuestionsData" 
                         :key="qus._id"
-                        :questionNo="index+1"
+                        :questionNo="index"
                         :questionDataProp="qus"
                         @updateQuestionPoints="updateQuestionPoints"></QuestionCard>
                 </v-col>

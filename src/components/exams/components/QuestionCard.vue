@@ -6,7 +6,7 @@
         <v-card-text>
             <v-row>
                 <v-col md="1" class="d-flex flex-column align-center">
-                    <h2>Q.{{ qus.number }}</h2>
+                    <h2>Q.{{ parseInt(questionNo) + 1 }}</h2>
                     <v-chip
                         class="ma-2 my-4"
                         :color="questionType"
@@ -70,7 +70,8 @@ export default {
     },
     props: {
         correctAns: Boolean,
-        questionDataProp: Object
+        questionDataProp: Object,
+        questionNo: Number
     },
     computed: {
         classes() {
