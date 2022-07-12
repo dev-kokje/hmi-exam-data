@@ -65,7 +65,7 @@ export default {
         title : "Studentenverteilungbove",
     },
     fileUpload : {
-        "AddNewCourse" : "Neuen Kurs hinzufügen",
+        "AddNewCourse" : "Kurs",
         "Upload" : "Hochladen",
         "FileUpload&Preview" : "Datei-Upload & Vorschau",
         "NoteSelectfileswithreportextension" : "Hinweis: Wählen Sie Dateien mit Berichtserweiterung aus",

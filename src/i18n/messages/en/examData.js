@@ -65,7 +65,7 @@ export default {
         title : "Student Distribution",
     },
     fileUpload : {
-        "AddNewCourse" : "Add New Course",
+        "AddNewCourse" : "Course",
         "Upload" : "Upload",
         "FileUpload&Preview" : "File Upload & Preview",
         "NoteSelectfileswithreportextension" : "Note: Select files with report extension",

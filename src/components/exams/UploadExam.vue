@@ -27,23 +27,23 @@
       </v-col>
       <!-- add new course -->
       <v-col xl="2" lg="3" md="6" sm="12" xs="12" cols="12">
-        <v-btn color="success" dark @click="showAddCourse = !showAddCourse">
-          {{$t('examData.fileUpload.AddNewCourse')}}
+        <v-btn
+          class="mr-2 white--text"
+          :loading="isUploading"
+          :disabled="isUploading || fileList.length == 0"
+          color="blue-grey"
+          @click="uploadFile()"
+        >
+          {{ $t("examData.fileUpload.Upload") }}
+          <v-icon right dark> mdi-cloud-upload </v-icon>
         </v-btn>
       </v-col>
     </v-row>
 
     <!-- File Upload Button -->
     <v-row align="center" justify="end">
-      <v-btn
-        class="mr-2 white--text"
-        :loading="isUploading"
-        :disabled="isUploading || fileList.length == 0"
-        color="blue-grey"
-        @click="uploadFile()"
-      >
-        {{$t('examData.fileUpload.Upload')}}
-        <v-icon right dark> mdi-cloud-upload </v-icon>
+      <v-btn color="success" dark @click="showAddCourse = !showAddCourse">
+        <v-icon left dark> mdi-plus </v-icon> {{ $t("examData.fileUpload.AddNewCourse") }}
       </v-btn>
     </v-row>
 
@@ -51,9 +51,11 @@
     <v-row align="center" justify="center" v-if="fileList.length == 0">
       <v-col cols="12" sm="10" md="10">
         <div class="card-heading">
-          <h2 class="teal--text">{{$t('examData.fileUpload.FileUpload&Preview')}}</h2>
+          <h2 class="teal--text">
+            {{ $t("examData.fileUpload.FileUpload&Preview") }}
+          </h2>
           <p class="lead">
-            {{$t('examData.fileUpload.NoteSelectfileswithreportextension')}}
+            {{ $t("examData.fileUpload.NoteSelectfileswithreportextension") }}
           </p>
         </div>
         <v-card
@@ -79,9 +81,13 @@
                 aria-hidden="true"
               ></i>
 
-              <div class="mt-5 mb-2">{{$t('examData.fileUpload.Selectafileordraghere')}}</div>
+              <div class="mt-5 mb-2">
+                {{ $t("examData.fileUpload.Selectafileordraghere") }}
+              </div>
 
-              <v-btn depressed color="primary"> {{$t('examData.fileUpload.Selectafile')}} </v-btn>
+              <v-btn depressed color="primary">
+                {{ $t("examData.fileUpload.Selectafile") }}
+              </v-btn>
             </label>
           </v-card-text>
         </v-card>
@@ -91,7 +97,7 @@
     <!-- upload files listing -->
     <v-row v-if="fileList.length > 0">
       <v-col>
-        <v-subheader>{{$t('examData.fileUpload.Preview')}}</v-subheader>
+        <v-subheader>{{ $t("examData.fileUpload.Preview") }}</v-subheader>
         <v-list subheader two-line>
           <v-list-item
             v-for="(item, index) in fileList"
@@ -134,7 +140,9 @@
       <v-dialog v-model="showAddCourse" persistent max-width="600px">
         <v-card>
           <v-card-title>
-            <span class="text-h5">{{$t('examData.fileUpload.AddCourse')}}</span>
+            <span class="text-h5">{{
+              $t("examData.fileUpload.AddCourse")
+            }}</span>
           </v-card-title>
 
           <v-card-text>
@@ -179,11 +187,11 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="addNewCourse(false)">
-              {{$t('examData.fileUpload.Close')}}
+            <v-btn color="warning darken-1" text @click="addNewCourse(false)">
+              {{ $t("examData.fileUpload.Close") }}
             </v-btn>
-            <v-btn color="blue darken-1" text @click="addNewCourse(true)">
-              {{$t('examData.fileUpload.AddCourse')}}
+            <v-btn color="success darken-1" dark @click="addNewCourse(true)">
+              {{ $t("examData.fileUpload.AddCourse") }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -241,7 +249,9 @@ export default {
       this.selectSemester = this.semesterList[0] ?? "";
     },
     async fetchCourses() {
-      const response = await axios.get("https://sleepy-meadow-31578.herokuapp.com/api/courses");
+      const response = await axios.get(
+        "https://sleepy-meadow-31578.herokuapp.com/api/courses"
+      );
       let courseList = response?.data?.Data || [];
       if (courseList.length == 0) {
         this.courseList = [];
@@ -370,7 +380,10 @@ export default {
       };
 
       axios
-        .post(`https://sleepy-meadow-31578.herokuapp.com/api/add-course/${semID}`, payload)
+        .post(
+          `https://sleepy-meadow-31578.herokuapp.com/api/add-course/${semID}`,
+          payload
+        )
         .then((response) => {
           console.log("response=>", response);
           if (response.status == 200) {
