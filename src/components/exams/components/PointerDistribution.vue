@@ -23,9 +23,10 @@
           </thead>
           <tbody>
             <tr
-              v-for="item in pointerDistribution"
+              v-for="(item,index) in pointerDistribution"
               :key="item.marks"
-              :class="getBG(item.gradeRange)"
+              :style="{ backgroundColor: getBG(item.gradeRange, index) }"
+              :class="getBG(item.gradeRange, index)"
             >
               <td class="text-center">
                 {{ item.marks }}
@@ -98,6 +99,8 @@ export default {
         deltaJFlag++;
         deltaJFlag = deltaJFlag % 3;
       }
+      
+      console.log('this.pointerDistribution=>', this.pointerDistribution.toString());
 
       //  get lower and upper brackets
       this.pointerDistribution.forEach((obj, index) => {
@@ -125,11 +128,26 @@ export default {
         );
       });
     },
-    getBG(range) {
-      if (range == "very good") return "green accent-2";
-      if (range == "good") return "lime accent-2";
-      if (range == "satisfactory") return "orange accent-2";
-      if (range == "insufficient") return "red accent-2";
+    getBG(range,index) {
+        console.log(index);
+        let backgroundColorArr = [
+        "#00FF00",
+        "#33ff00",
+        "#66ff00",
+        "#99ff00",
+        "#ccff00",
+        "#FFFF00",
+        "#FFCC00",
+        "#ff9900",
+        "#ff6600",
+        "#FF3300",
+        "#FF0000",
+      ];
+      return backgroundColorArr[index];
+    //   if (range == "very good") return "green accent-2";
+    //   if (range == "good") return "lime accent-2";
+    //   if (range == "satisfactory") return "orange accent-2";
+    //   if (range == "insufficient") return "red accent-2";
     },
   },
   watch: {

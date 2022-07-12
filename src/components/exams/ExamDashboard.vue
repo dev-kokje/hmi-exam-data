@@ -1,26 +1,28 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-    
-    <div>
+  <div>
+    <v-alert type="info" elevation="2" dense>
+      {{ $t("examData.resultDetails.infomessage") }}
+    </v-alert>
 
-        <v-alert
-            type="info"
-            elevation="2"
-            dense
-            >
-            {{ $t('examData.resultDetails.infomessage') }}
-        </v-alert>
-        
     <v-row class="pb-4">
       <v-col md="12">
         <v-simple-table fixed-header class="exam-table">
           <template v-slot:default>
             <thead>
               <tr>
-                <th class="text-left border-right">{{$t('examData.examDashboard.Semester')}}</th>
-                <th class="text-left border-right">{{$t('examData.examDashboard.Course')}}</th>
-                <th class="text-left border-right">{{$t('examData.examDashboard.MaximumPoints')}}</th>
-                <th class="text-left border-right">{{$t('examData.examDashboard.PassingPoints')}}</th>
+                <th class="text-left border-right">
+                  {{ $t("examData.examDashboard.Semester") }}
+                </th>
+                <th class="text-left border-right">
+                  {{ $t("examData.examDashboard.Course") }}
+                </th>
+                <th class="text-left border-right">
+                  {{ $t("examData.examDashboard.MaximumPoints") }}
+                </th>
+                <th class="text-left border-right">
+                  {{ $t("examData.examDashboard.PassingPoints") }}
+                </th>
                 <th class="text-left"></th>
               </tr>
             </thead>
@@ -53,7 +55,11 @@
                         examDataProp.passingPoints < 0)
                     "
                   >
-                    {{ toggleFlag ? $t('examData.examDashboard.save') : $t('examData.examDashboard.edit') }}
+                    {{
+                      toggleFlag
+                        ? $t("examData.examDashboard.save")
+                        : $t("examData.examDashboard.edit")
+                    }}
                   </v-btn>
                 </td>
               </tr>
@@ -66,13 +72,13 @@
     <v-divider></v-divider>
 
     <v-row class="mt-4 p-0">
-      <v-col cols="6" class="p-0">
+      <v-col xs="12" sm="12" md="12" lg="6" xl="6" class="p-0">
         <PointerDistribution
           :baseMark="baseMark"
           :examDataProp="examDataProp"
         />
       </v-col>
-      <v-col cols="6" class="p-0">
+      <v-col xs="12" sm="12" md="12" lg="6" xl="6" class="p-0">
         <StudentDistribution
           :baseMark="baseMark"
           :examDataProp="examDataProp"
@@ -91,6 +97,7 @@ export default {
     return {
       toggleFlag: false,
       baseMark: 0,
+      componentWidth : 0,
     };
   },
   props: {
@@ -101,9 +108,12 @@ export default {
     StudentDistribution,
   },
   mounted() {
-    this.baseMark = Number(this.examDataProp.passingPoints) ?? 0;
+    this.setBaseMark();
   },
   methods: {
+    setBaseMark() {
+      this.baseMark = Number(this.examDataProp.passingPoints) ?? 0;
+    },
     editToggle() {
       if (this.toggleFlag) {
         this.updatePassPoint();
@@ -125,6 +135,17 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    }
+  },
+  watch: {
+    baseMark: {
+      // the callback will be called immediately after the start of the observation
+      deep: true,
+      immediate: true,
+      handler(val, oldVal) {
+        console.log(val, oldVal);
+        this.setBaseMark();
+      },
     },
   },
 };
