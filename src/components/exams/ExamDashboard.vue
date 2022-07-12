@@ -124,10 +124,14 @@ export default {
       this.baseMark = Number(this.examDataProp.passingPoints) ?? 0;
       // update marks api call
       let course_id = this.examDataProp.course._id;
+      let payload = {
+        passing_points : this.baseMark,
+      }
       axios
         .patch(
           // api path to be updated
-          `https://sleepy-meadow-31578.herokuapp.com/api/exam-marks-update/${course_id}/${this.baseMark}`
+          `https://sleepy-meadow-31578.herokuapp.com/api/sem/update-points/${course_id}`,
+          payload
         )
         .then((response) => {
           console.log("on marks update=>", response);
