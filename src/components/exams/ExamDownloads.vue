@@ -14,12 +14,13 @@
                                 :key="type"
                                 :label="type"
                                 :value="type"
+                                @change="createZipAllFiles"
                             ></v-radio>
                         </v-radio-group>
 
                         <v-btn
-                            :loading="loading3"
-                            :disabled="disabled"
+                            :loading="loadingAllFiles"
+                            :disabled="disabledAllFiles"
                             color="primary"
                             class="my-2 white--text"
                             @click="downloadAllFiles"
@@ -50,9 +51,10 @@
                         <h2>Download file for a specific students</h2>
 
                         <v-autocomplete
+                            v-model="selectedStudents"
                             class="mt-5"
                             :items="students"
-                            item-text="student_id"
+                            item-text="student[0].enrollment_number"
                             clearable
                             multiple
                             small-chips
@@ -68,15 +70,16 @@
                                 :key="type"
                                 :label="type"
                                 :value="type"
+                                @change="createZipSelectedFiles"
                             ></v-radio>
                         </v-radio-group>
 
                         <v-btn
-                            :loading="loading3"
-                            :disabled="disabled"
+                            :loading="loadingSelectedFiles"
+                            :disabled="disabledSelectedFiles"
                             color="primary"
                             class="my-2 white--text"
-                            @click="loader = 'loading3'"
+                            @click="downloadAllFiles"
                             width="100%"
                             large
                             >
@@ -98,80 +101,120 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            examDataProp: Object
-        },
-        data() {
-            return {
-                loading3: false,
-                disabled: false,
-                fileTypes: [
-                    "Reports (.report)",
-                    "PDF (.pdf)",
-                    "Excel (.xlsx)"
-                ],
-                students: [...this.examDataProp.examResults],
-                examQuestionsData: []
-            }
-        },
-        methods: {
-            downloadAllFiles() {
 
-                let fileData = []
-                fileData.push(`Matrikelnummer: ${JSON.stringify(this.examDataProp)}`)
+import JsZip from "jszip"
+import fileSaver from "file-saver"
 
-                let fetchDataPromise = new Promise(function(myResolve, myReject) {      
+export default {
+    props: {
+        examDataProp: Object,
+    },
+    data() {
+        return {
+            loadingAllFiles: false,
+            disabledAllFiles: false,
+            loadingSelectedFiles: false,
+            disabledSelectedFiles: false,
+            fileTypes: [
+                "Reports (.report)",
+                "PDF (.pdf)"
+            ],
+            students: [...this.examDataProp.examResults],
+            examQuestionsData: [],
+            zip: null,
+            selectedStudents: []
+        }
+    },
+    methods: {
+        createZipAllFiles() {
+            this.loadingAllFiles = true
+            this.disabledAllFiles = true
 
-                    let files = []
+            let zip = new JsZip()
 
-                    let examResultsData = this.examDataProp.examResults
-                    examResultsData.forEach((examResult) => {
+            let examResultsData = this.examDataProp.examResults.filter()
+            examResultsData.forEach((examResult) => {
 
-                        let fileContent = []
-                        fileContent.push(`Matrikelnummer: ${JSON.stringify(examResult.student_id)}`)
+            let fileContent = []
+            fileContent.push(`Matrikelnummer: ${examResult.student[0].enrollment_number}\n`)
 
-                        const examResultId = examResult._id
-                        const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/students/exam/${examResultId}`;
-                        this.$http
-                            .get(baseUrl)
-                            .then((results) => {
-                                this.examQuestionsData = results.data.Data
-                                this.examQuestionsData.forEach((examQuestion, index) => {
-                                    const line1 = `Frage: (${JSON.stringify(examQuestion.type)}) ${index+1}) ${examQuestion.question} [${examQuestion.maximum_points}]`
-                                    const line2 = `Korrekte Anwort:${examQuestion.correct_answer}`
-                                    const line3 = `Ihre Anwort:${examQuestion.given_answer}`
-                                    const line4 = `Punkte: ${examQuestion.scored_points}/${examQuestion.maximum_points}`
-                                    fileContent.push(line1)
-                                    fileContent.push(line2)
-                                    fileContent.push(line3)
-                                    fileContent.push(line4)
-                                })
-                                const blob = new Blob(fileContent, {type : 'text/html'});
-                                files.push(blob)
-                            })
+            const examResultId = examResult._id
+            const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/students/exam/${examResultId}`;
+            this.$http
+                .get(baseUrl)
+                .then((results) => {
+                    this.examQuestionsData = results.data.Data
+                    this.examQuestionsData.forEach((examQuestion, index) => {
+                        const line1 = `Frage: (${examQuestion.question_type}) ${index+1}) ${examQuestion.question} [${examQuestion.maximum_points}]\n`
+                        const line2 = `Korrekte Anwort:${examQuestion.correct_answer}\n`
+                        const line3 = `Ihre Anwort:${examQuestion.given_answer}\n`
+                        const line4 = `Punkte: ${examQuestion.scored_points}/${examQuestion.maximum_points}\n`
+                        fileContent.push(line1)
+                        fileContent.push(line2)
+                        fileContent.push(line3)
+                        fileContent.push(line4)
                     })
-
-                    if(files.length > 0) {
-                        myResolve("Success")
-                    } else {
-                        myReject("Failure")
-                    }
+                    const blob = new Blob(fileContent, {type : 'text/plain'});
+                    const filename = `${examResult.student[0].enrollment_number}.report`
+                    zip.file(filename ,blob)
+                    console.log("Data saved")
+                    this.loadingAllFiles = false
+                    this.disabledAllFiles = false
                 })
+            })
+            this.zip = zip
+        },
+        createZipSelectedFiles() {
+            console.log("Selected students - ", this.selectedStudents)
+            this.loadingSelectedFiles = true
+            this.disabledSelectedFiles = true
 
-                fetchDataPromise.then(
+            let zip = new JsZip()
 
-                ).error(
+            let examResultsData = this.examDataProp.examResults.filter(result => this.selectedStudents.includes(result.student[0].enrollment_number))
+            examResultsData.forEach((examResult) => {
 
-                )
-                
-                
-                // const link = document.createElement('a')
-                // link.href = URL.createObjectURL(blob);
-                // link.download = "test";
-                // link.click();
-                // URL.revokeObjectURL(link.href);
+            let fileContent = []
+            fileContent.push(`Matrikelnummer: ${examResult.student[0].enrollment_number}\n`)
+
+            const examResultId = examResult._id
+            const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/students/exam/${examResultId}`;
+            this.$http
+                .get(baseUrl)
+                .then((results) => {
+                    this.examQuestionsData = results.data.Data
+                    this.examQuestionsData.forEach((examQuestion, index) => {
+                        const line1 = `Frage: (${examQuestion.question_type}) ${index+1}) ${examQuestion.question} [${examQuestion.maximum_points}]\n`
+                        const line2 = `Korrekte Anwort:${examQuestion.correct_answer}\n`
+                        const line3 = `Ihre Anwort:${examQuestion.given_answer}\n`
+                        const line4 = `Punkte: ${examQuestion.scored_points}/${examQuestion.maximum_points}\n`
+                        fileContent.push(line1)
+                        fileContent.push(line2)
+                        fileContent.push(line3)
+                        fileContent.push(line4)
+                    })
+                    const blob = new Blob(fileContent, {type : 'text/plain'});
+                    const filename = `${examResult.student[0].enrollment_number}.report`
+                    zip.file(filename ,blob)
+                    console.log("Data saved")
+                    this.loadingSelectedFiles = false
+                    this.disabledSelectedFiles = false
+                })
+            })
+            this.zip = zip
+        },
+        downloadAllFiles() {
+
+            if(this.zip != null) {
+                const fileName = this.examDataProp.semester.name + "_" + this.examDataProp.course.name 
+                this.zip.generateAsync({type:"blob"}).then(function (blob) { 
+                    console.log("Downloading....")
+                    fileSaver.saveAs(blob, `${fileName}.zip`)
+                })
+            } else {
+                console.log("No files created")
             }
         }
     }
+}
 </script>
