@@ -37,6 +37,8 @@
           @updateQuestionPoints="updateQuestionPoints"
           @updatePassingMarks="updatePassingMarks"
           class="full-height" />
+
+          <img v-else :src="flagImage" />
       </v-col>
     </v-row>
   </div>
@@ -47,6 +49,7 @@ import ExamDataSideBar from "./ExamDataSideBar.vue";
 import ExamQuestionsData from "./ExamQuestionsData.vue";
 import ExamSearchBar from "./ExamSearchBar.vue";
 import examDataMixin from "../../mixins/examDataMixin";
+import img from "../../assets/dashboard1.jpg"
 
 export default {
   name: "ExamData",
@@ -80,6 +83,11 @@ export default {
     sideBarReload: 0,
     currentTabProp: 0
   }),
+  computed: {
+    flagImage() {
+      return img
+    }
+  },
   methods: {
     fetchExamData(val) {
       this.semester = val.semester

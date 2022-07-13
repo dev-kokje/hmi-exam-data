@@ -23,6 +23,7 @@
                         class="my-1 pa-0 edit-point"
                         :suffix="'/'.concat(qus.maximum_points)"
                         v-if="editPoints"
+                        :rules="[rules.validPoints]"
                         @focusout="changePoints(1)"
                     ></v-text-field>
                     <v-chip
@@ -65,7 +66,10 @@ export default {
         return {
             questionData: {...this.questionDataProp},
             editPoints: false,
-            points: 0
+            points: 0,
+            rules: {
+                validPoints: value => value <= this.questionDataProp.maximum_points
+            }
         }
     },
     props: {
@@ -97,7 +101,7 @@ export default {
     methods: {
         changePoints(val) {
             this.editPoints = !this.editPoints
-            if(val == 1) {
+            if(val == 1 && this.points <= this.questionData.maximum_points) {
                 console.log("Updated points to ", this.points ," for question id - ", this.questionData._id)
                 this.$emit("updateQuestionPoints", {
                     questionId: this.questionData._id,
