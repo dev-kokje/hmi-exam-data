@@ -135,6 +135,7 @@ export default {
         )
         .then((response) => {
           console.log("on marks update=>", response);
+          this.$emit("updatePassingMarks", {passingPoints: this.baseMark})
         })
         .catch((err) => {
           console.log(err);

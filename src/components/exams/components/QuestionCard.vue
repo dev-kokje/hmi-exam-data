@@ -71,7 +71,7 @@ export default {
     props: {
         correctAns: Boolean,
         questionDataProp: Object,
-        questionNo: Number
+        questionNo: String
     },
     computed: {
         classes() {

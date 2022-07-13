@@ -35,6 +35,7 @@
           :studentIdSelectedProp="studentIdSelected"
           :currentTabProp="currentTabProp"
           @updateQuestionPoints="updateQuestionPoints"
+          @updatePassingMarks="updatePassingMarks"
           class="full-height" />
       </v-col>
     </v-row>
@@ -87,8 +88,8 @@ export default {
       this.examData = {
         semester: val.semester,
         course: val.course,
-        maxPoints: 100,
-        passingPoints: 50
+        maxPoints: val.course.maximum_points,
+        passingPoints: val.course.passing_points
       }
 
       if (Object.keys(this.semester).length !== 0 && Object.keys(this.course).length !== 0) {
@@ -107,12 +108,15 @@ export default {
       }
     },
     studentSelected(val) {
+      console.log("Exam result id - ", val)
 
       this.overlay = true
 
-      console.log("Exam result id - ", val)
-
       let examResultId = val
+      if(examResultId === null || examResultId === undefined) {
+        this.overlay = false
+        return
+      }
       this.examResultData =  this.examData.examResults.find(exam => exam._id === examResultId)
       console.log("Exam data examDataResultProp", this.examResultData)
       const baseUrl = `https://sleepy-meadow-31578.herokuapp.com/api/students/exam/${examResultId}`;
@@ -182,6 +186,13 @@ export default {
           console.log(result)
         })
 
+    },
+    updatePassingMarks(val) {
+      this.examData.passingPoints = val.passingPoints
+      this.gradeCalculation()
+      this.currentTabProp = 0
+      this.studentIdKey++
+      console.log("re-render component")
     }
   },
   mixins: [examDataMixin]

@@ -29,7 +29,12 @@
 
         <v-divider></v-divider>
 
-        <ExamDashboard :key="studentIdKey" class="mt-2" v-show="currentTab==0" :examDataProp="examDataProp" />
+        <ExamDashboard 
+            :key="studentIdKey" 
+            class="mt-2" 
+            v-show="currentTab==0" 
+            :examDataProp="examDataProp"
+            @updatePassingMarks="updatePassingMarks" />
 
         <ExamDownloads :key="studentIdKey" :examDataProp="examData" v-show="currentTab==1" />
 
@@ -161,6 +166,9 @@ export default {
         },
         updateQuestionPoints(val) {
             this.$emit("updateQuestionPoints", val)
+        },
+        updatePassingMarks(val) {
+            this.$emit("updatePassingMarks", val)
         }
     }
 }
