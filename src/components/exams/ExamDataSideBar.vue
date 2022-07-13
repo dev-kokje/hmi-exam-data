@@ -29,7 +29,7 @@
                     v-model="gradeSelect"
                     :label="grade.text"
                     :disabled="grade.disabled"
-                    color="info"
+                    color="primary"
                     :value="grade.value"
                     hide-details
                     dense
@@ -57,7 +57,7 @@
             <v-list dense>
             <v-list-item-group
                 v-model="selectedItem"
-                color="primary"
+                color="info"
                 @change="selectStudent"
             >
                 <v-list-item

@@ -13,6 +13,7 @@
         <v-icon right> mdi-logout </v-icon>
       </v-btn>
 
+      <theme-switcher />
       <LanguageSwitcher />
     </v-toolbar>
 
@@ -51,6 +52,7 @@
 
 <script>
 import LanguageSwitcher from './LanguageSwitcher.vue';
+import ThemeSwitcher from './ThemeSwitcher.vue';
 export default {
     name: "NavBar",
     data() {
@@ -75,7 +77,7 @@ export default {
             this.drawer = !this.drawer;
         },
     },
-    components: { LanguageSwitcher }
+    components: { LanguageSwitcher, ThemeSwitcher }
 };
 </script>
 

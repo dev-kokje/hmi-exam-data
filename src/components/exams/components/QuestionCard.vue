@@ -75,8 +75,10 @@ export default {
     },
     computed: {
         classes() {
-
-            let cls = this.questionData.scored_points > 0 ? "green-background" : "red-background"
+            let cls = (this.questionData.scored_points > 0) ? "green-border" : "red-border"
+            if(!this.$vuetify.theme.dark) {
+                cls = (this.questionData.scored_points > 0) ? "green-background" : "red-background"
+            }
             return cls + " my-2"
         },
         qus() {
@@ -119,6 +121,14 @@ export default {
     }
     .green-background {
         background-color: #e9f9e6;
+    }
+    .red-border {
+        border: 1px solid #fde8e8;
+        border-bottom: 5px solid #fde8e8;
+    }
+    .green-border {
+        border: 1px solid #e9f9e6;
+        border-bottom: 5px solid #e9f9e6;
     }
     .edit-point {
         max-width: 60px;

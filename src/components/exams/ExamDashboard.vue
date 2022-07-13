@@ -41,6 +41,8 @@
                   <v-text-field
                     type="number"
                     v-model="examDataProp.passingPoints"
+                    :rules="[rules.maxPassPoints]"
+                    hint="Passing points must not exceed the maximum points"
                     :disabled="!toggleFlag"
                   />
                 </td>
@@ -98,6 +100,9 @@ export default {
       toggleFlag: false,
       baseMark: 0,
       componentWidth : 0,
+      rules: {
+        maxPassPoints: value => value <= this.examDataProp.maxPoints
+      }
     };
   },
   props: {

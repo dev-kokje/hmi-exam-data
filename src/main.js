@@ -14,5 +14,6 @@ new Vue({
   vuetify,
   i18n,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  theme: { dark: true },
 }).$mount('#app')

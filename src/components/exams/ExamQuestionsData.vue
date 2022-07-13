@@ -2,9 +2,11 @@
     <div>
 
         <v-tabs
-            v-model="currentTab" 
-            background-color="#fafafa"
-            light>
+            v-model="currentTab"
+            :class="{
+                'back-gray': !$vuetify.theme.dark,
+                'back-dark': $vuetify.theme.dark,
+            }">
             <v-tab 
                 class="tab-text"
                 @click="toggleTab(0)"
@@ -183,5 +185,13 @@ export default {
 }
 .tab-text {
     text-transform: none !important;
+}
+
+.back-gray {
+    background-color: #fafafa;
+}
+
+.back-dark {
+    background-color: #444;
 }
 </style>

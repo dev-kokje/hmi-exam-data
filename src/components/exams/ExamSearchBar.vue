@@ -21,6 +21,9 @@
                 :items="coursesList" 
                 item-text="displayName"
                 item-value="_id"
+                :error="courseError"
+                :hint="courseHint"
+                persistent-hint
                 :label="$t('examData.topBar.course')"></v-select>
         </v-col>
 
@@ -41,6 +44,8 @@ export default {
         ],
         semester: "",
         course: "",
+        courseError: false,
+        courseHint: ""
     }),
     methods: {
         searchCourseData() {
@@ -56,6 +61,13 @@ export default {
                 .get(baseUrl)
                 .then((results) => {
                     this.coursesList = results.data.Data
+                    if(this.coursesList.length == 0) {
+                        this.courseError = true
+                        this.courseHint = "No course data available for the selected semester"
+                    } else {
+                        this.courseError = false
+                        this.courseHint = ""
+                    }
                     this.coursesList.map((course) => {
                         course.displayName = course.code + " - " + course.name
                     })

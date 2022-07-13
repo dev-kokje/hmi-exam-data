@@ -1,5 +1,8 @@
 <template>
-  <v-container fluid class="background-gray pa-0 pb-10">
+  <v-container dark fluid class="pa-0 pb-10"
+    :class="{
+            'background-gray': !$vuetify.theme.dark,
+          }">
     <ExamDataHeader @onTabClick="toggleTab" />
     <v-divider />
 
@@ -32,7 +35,7 @@ export default {
   methods: {
     toggleTab(value) {
       this.currTab = value;
-    },
+    }
   },
 };
 </script>
